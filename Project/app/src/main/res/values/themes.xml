@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 基础主题 -->
+    <style name="Base.Theme.SmartStudent" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <!-- 全局主题定制 -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+
+<!--        &lt;!&ndash; 全局字体强制覆盖（关键修改） &ndash;&gt;-->
+<!--        <item name="android:fontFamily">@font/noto_sans_sc</item>-->
+<!--        <item name="fontFamily">@font/noto_sans_sc</item>-->
+
+    </style>
+
+    <!-- 应用主题 -->
+    <style name="Theme.SmartStudent" parent="Base.Theme.SmartStudent" />
+
+</resources>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/activity_main_background"
+    android:orientation="vertical"
+    tools:context=".Activity_student_main">
+
+    <!-- 顶部空白占 1/5 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- 中间主要内容 -->
+
+    <!-- 底部空白占 8/10 -->
+
+    <TextView
+        android:id="@+id/logo_name"
+        android:layout_width="248dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/notosanssc_bold"
+        android:text="@string/logo_name"
+        android:textSize="42sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5" />
+
+    <!-- 底部按钮占 1/10 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            >
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnToLogin"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="6"
+                android:background="@drawable/button_bg_login"
+                android:fontFamily="@font/notosanssc_bold"
+                android:text="@string/login"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:textSize="20dp"
+                android:textColor="@color/tea_green" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            >
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnToRegister"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="6"
+                android:layout_width="120dp"
+                android:layout_height="48dp"
+                android:text="@string/register"
+                android:textColor="@color/tea_brown"
+                android:fontFamily="@font/notosanssc_bold"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:background="@drawable/button_bg_register"
+                />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+</LinearLayout>

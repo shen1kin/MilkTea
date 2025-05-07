@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">SmartStudent</string>
+
+    <!--    activity_main-->
+
+    <!--    login register-->
+    <string name="logo_name">夕茶</string>
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="username">账号</string>
+    <string name="account">用户名</string>
+    <string name="password">密码</string>
+    <string name="again_password">再次输入密码</string>
+    <string name="role">普通用户留空，注册管理员输入密码</string>
+
+
+    <!--student-->
+
+    <!--    activity_student_main-->
+    <string name="student_main_navigation1">首页</string>
+    <string name="student_main_navigation2">课表查询</string>
+    <string name="student_main_navigation3">成绩查询</string>
+    <string name="student_main_navigation4">我的</string>
+
+
+    <!--admin-->
+
+    <!--    activity_admin_main-->
+    <string name="admin_main_navigation1">首页</string>
+    <string name="admin_main_navigation2">商品管理</string>
+    <string name="admin_main_navigation3">人员管理</string>
+    <string name="admin_main_navigation4">我的</string>
+
+    <!--  fragment_student_profile  -->
+    <string name="profile_name">姓名</string>
+    <string name="profile_info_text1">积分商店</string>
+    <string name="profile_info_text2">喜茶券</string>
+    <string name="profile_info_text3">喜卡</string>
+    <string name="profile_info_text4">消息</string>
+    <string name="profile_vipserve_title">会员服务</string>
+    <string name="profile_vipserve_vip_code">会员码</string>
+    <string name="profile_vipserve_task_centers">任务中心</string>
+    <string name="profile_vipserve_receipt">发票助手</string>
+    <string name="profile_vipserve_service">联系客服</string>
+    <string name="profile_vipserve_exchange_centers">兑换中心</string>
+    <string name="profile_vipserve_set">设置</string>
+    <string name="profile_vipserve_more">更多</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

@@ -1,0 +1,32 @@
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 极细体 -->
+    <font
+        android:font="@font/notosanssc_thin"
+        android:fontWeight="100"
+        android:fontStyle="normal" />
+
+    <!-- 细体 -->
+    <font
+        android:font="@font/notosanssc_light"
+        android:fontWeight="300"
+        android:fontStyle="normal" />
+
+    <!-- 常规体 -->
+    <font
+        android:font="@font/notosanssc_regular"
+        android:fontWeight="400"
+        android:fontStyle="normal" />
+
+    <!-- 中等 -->
+    <font
+        android:font="@font/notosanssc_medium"
+        android:fontWeight="500"
+        android:fontStyle="normal" />
+
+    <!-- 加粗 -->
+    <font
+        android:font="@font/notosanssc_bold"
+        android:fontWeight="700"
+        android:fontStyle="normal" />
+
+</font-family>

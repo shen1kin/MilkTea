@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/admin_home_navigation"
+        android:title="@string/admin_main_navigation1"
+        android:icon="@drawable/home"
+        />
+
+    <item
+        android:id="@+id/admin_course_navigation"
+        android:title="@string/admin_main_navigation2"
+        android:icon="@drawable/course"
+        />
+
+    <item
+        android:id="@+id/admin_score_navigation"
+        android:title="@string/admin_main_navigation3"
+        android:icon="@drawable/score"
+        />
+
+    <item
+        android:id="@+id/admin_profile_navigation"
+        android:title="@string/admin_main_navigation4"
+        android:icon="@drawable/profile"
+        />
+
+</menu>

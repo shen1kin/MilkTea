@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 统一 TextView 样式：比如诗句、公告通知这些 -->
+    <style name="BigCardContainerStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#333333</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <!-- 公告通知卡片样式 -->
+    <style name="MyCardStyle">
+        <item name="android:padding">16dp</item>
+        <item name="android:elevation">4dp</item> <!-- 有阴影效果 -->
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+
+
+
+</resources>
