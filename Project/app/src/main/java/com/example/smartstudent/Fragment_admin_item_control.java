@@ -20,6 +20,7 @@ import java.util.List;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -32,13 +33,26 @@ public class Fragment_admin_item_control extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_admin_item_control,container,false);
         //初始化控件
-        RecyclerView rv_item_list_view = view.findViewById(R.id.rvItemList);
+        RecyclerView rv_item_list_view = view.findViewById(R.id.recyclerView);
 
         List<ItemInfo> itemInfoList = new ArrayList<>();
 
         //模拟数据
         itemInfoList.add(new ItemInfo(0,"第1个名字","10","上架","$100"));
         itemInfoList.add(new ItemInfo(1,"第2个名字","516","下架","$546456"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
+        itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
         itemInfoList.add(new ItemInfo(2,"第3个名字","654968","上架","$6845"));
         //初始化适配器
         ItemListAdapter itemListAdapter = new ItemListAdapter(itemInfoList);
@@ -75,11 +89,25 @@ public class Fragment_admin_item_control extends Fragment {
 
         return view;
     }
-
+    //按钮  显示与隐藏
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //获取名字
+        LinearLayout buttonLayout = view.findViewById(R.id.buttonLayout);
+        RecyclerView rvItemList = view.findViewById(R.id.recyclerView);
+        rvItemList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    // 向下滑动，隐藏按钮
+                    buttonLayout.setVisibility(View.GONE);
+                } else if (dy < 0) {
+                    // 向上滑动，显示按钮
+                    buttonLayout.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
     }
 

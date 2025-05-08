@@ -1,27 +1,30 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
-        android:id="@+id/contentLayout"
+    <!-- 顶部搜索栏区域 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical"
-        android:layout_above="@+id/buttonLayout">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        android:fitsSystemWindows="true"
+        android:background="@null"
+        >
 
-        <!-- 搜索区域 -->
         <LinearLayout
+            android:id="@+id/searchLayout"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
-            android:padding="5dp"
+            android:layout_height="50dp"
             android:orientation="horizontal"
+            android:padding="5dp"
             android:background="@drawable/item_bg_search"
-            android:gravity="center">
+            android:gravity="center"
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <Spinner
                 android:id="@+id/spSearchList"
@@ -32,18 +35,19 @@
                 android:spinnerMode="dropdown"
                 android:popupBackground="@color/white"
                 android:dropDownWidth="200dp"
-                android:dropDownVerticalOffset="40dp" />
+                android:dropDownVerticalOffset="40dp"
+
+                />
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="9"
                 android:layout_marginRight="10dp"
                 android:background="@null"
                 android:hint="请输入"
                 android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                />
+                android:textColorHint="@color/white" />
 
             <Button
                 android:id="@+id/butSearch"
@@ -52,25 +56,25 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/search" />
         </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <!-- 可滚动列表 -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvItemList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            tools:listitem="@layout/item_item" />
-    </LinearLayout>
+    <!-- 正文内容 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:listitem="@layout/item_item" />
 
-    <!-- 底部按钮区域 -->
+    <!-- 底部按钮栏 -->
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:background="@color/gray_cement"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:layout_gravity="bottom"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior">
 
         <Button
             android:id="@+id/butAddItem"
@@ -78,7 +82,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textColor="@color/soft_green_1"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             android:text="添加商品" />
@@ -89,9 +93,10 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:textColor="@color/soft_red_1"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             android:text="删除商品" />
     </LinearLayout>
-</RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
