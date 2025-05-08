@@ -7,15 +7,19 @@
     android:orientation="vertical"
     >
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="管理员profile1111111111111111" />
 
-    <Button
-        android:id="@+id/butExitLogin"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="退出登录" />
+        android:text="上哦管理界面"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvItemList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_item"
+
+        />
+
 </LinearLayout>

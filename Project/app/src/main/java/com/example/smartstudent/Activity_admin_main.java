@@ -32,8 +32,8 @@ public class Activity_admin_main extends AppCompatActivity {
                 case R.id.admin_home_navigation:
                     loadFragment(new Fragment_admin_home());  // 切换到首页 Fragment
                     return true;
-                case R.id.admin_course_navigation:
-                    loadFragment(new Fragment_admin_course());  // 切换到课表设计
+                case R.id.admin_item_control_navigation:
+                    loadFragment(new Fragment_admin_item_control());  // 切换到商品管理
                     return true;
                 case R.id.admin_score_navigation:
                     loadFragment(new Fragment_admin_commodity());  // 切换到成绩设计

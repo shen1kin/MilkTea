@@ -3,7 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#e8e8e8</color>
+    <color name="gray_dark">#adadad</color>
     <color name="gray_hover">#dddddd</color>
+
 
     <color name="tea_brown">#D4B996</color> <!-- 奶茶棕 -->
     <color name="tea_orange">#E67A2E</color><!-- 焦糖橙 -->
