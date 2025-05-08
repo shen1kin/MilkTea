@@ -70,6 +70,7 @@ dependencies {
         exclude(group = "com.google.protobuf", module = "protobuf-java")
     }
     implementation(libs.androidx.junit)
+    implementation(libs.common)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)

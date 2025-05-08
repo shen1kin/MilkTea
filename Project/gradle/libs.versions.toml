@@ -12,6 +12,7 @@ constraintlayout = "2.1.4"
 mysqlConnectorJavaVersion = "8.0.28"
 firebaseFirestore = "25.1.4"
 androidxJunit = "1.2.1"
+common = "0.10.0"
 
 [libraries]
 android-sdk = { module = "com.jinrishici:android-sdk", version.ref = "androidSdk" }
@@ -26,6 +27,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 mysql-mysql-connector-java = { module = "mysql:mysql-connector-java", version.ref = "mysqlConnectorJavaVersion" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version = "24.4.5" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
+common = { group = "com.google.ai.client.generativeai", name = "common", version.ref = "common" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

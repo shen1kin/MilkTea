@@ -4,7 +4,20 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#e8e8e8</color>
     <color name="gray_dark">#adadad</color>
+    <color name="gray_thin">#5e5e5e</color>
     <color name="gray_hover">#dddddd</color>
+    <color name="gray_cement">#4c4c4c</color>
+
+    <color name="soft_green_1">#A8D5BA</color>
+    <color name="soft_green_2">#90C695</color>
+    <color name="soft_green_3">#B2D8B2</color>
+    <color name="soft_green_4">#C3E5AE</color>
+
+    <color name="soft_red_1">#F4A6A6</color>
+    <color name="soft_red_2">#EFA8A8</color>
+    <color name="soft_red_3">#E6B7B7</color>
+    <color name="soft_red_4">#F8C0C0</color>
+
 
 
     <color name="tea_brown">#D4B996</color> <!-- 奶茶棕 -->
