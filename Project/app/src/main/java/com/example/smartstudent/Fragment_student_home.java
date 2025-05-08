@@ -1,80 +1,70 @@
 package com.example.smartstudent;
 
-import static android.content.ContentValues.TAG;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import android.widget.Button;
-import android.widget.Toast;
-import androidx.viewpager2.widget.ViewPager2;
 public class Fragment_student_home extends Fragment {
 
     private ViewPager2 viewPager;
-
-    private Handler sliderHandler = new Handler(Looper.getMainLooper());
+    private Handler sliderHandler;
     private Runnable sliderRunnable;
-
-    // 原始图片列表
     private final Integer[] imageList = {
             R.drawable.zs1,
             R.drawable.zs2,
             R.drawable.zs3
     };
 
-    // 扩展后的“无限”图片列表
     private List<Integer> loopedImageList;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_home, container, false);
 
-        // 扩展图片列表（重复3次）
-        loopedImageList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            loopedImageList.addAll(Arrays.asList(imageList));
-        }
+        setupViewPager(view);
+        setupButtonClicks(view);
+        setupImageShortcuts(view);
 
+        return view;
+    }
+
+    private void setupViewPager(View view) {
+        loopedImageList = new ArrayList<>();
+        for (int i = 0; i < 3; i++) loopedImageList.addAll(Arrays.asList(imageList));
 
         viewPager = view.findViewById(R.id.viewPager);
         ImageSliderAdapter adapter = new ImageSliderAdapter(loopedImageList);
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(imageList.length, false);
 
-        // 滚动到中段开始
-        int startPosition = imageList.length;
-        viewPager.setCurrentItem(startPosition, false);
-
-        // 自动轮播逻辑
+        sliderHandler = new Handler(Looper.getMainLooper());
         sliderRunnable = () -> {
-            int nextItem = viewPager.getCurrentItem() + 1;
-            viewPager.setCurrentItem(nextItem, true);
+            int next = viewPager.getCurrentItem() + 1;
+            viewPager.setCurrentItem(next, true);
             sliderHandler.postDelayed(sliderRunnable, 3000);
         };
         sliderHandler.postDelayed(sliderRunnable, 3000);
 
-        // 页面滑动监听
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrollStateChanged(int state) {
-                int position = viewPager.getCurrentItem();
-                int totalSize = loopedImageList.size();
-
+                int pos = viewPager.getCurrentItem();
                 if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                    if (position == 0) {
-                        viewPager.setCurrentItem(imageList.length, false);
-                    } else if (position == totalSize - 1) {
+                    if (pos == 0) viewPager.setCurrentItem(imageList.length, false);
+                    else if (pos == loopedImageList.size() - 1)
                         viewPager.setCurrentItem(imageList.length * 2 - 1, false);
-                    }
                 }
             }
 
@@ -84,30 +74,42 @@ public class Fragment_student_home extends Fragment {
                 sliderHandler.postDelayed(sliderRunnable, 3000);
             }
         });
+    }
 
-        // 示例按钮
+    private void setupButtonClicks(View view) {
         Button btnStorePickup = view.findViewById(R.id.btnStorePickup);
         Button btnDelivery = view.findViewById(R.id.btnDelivery);
 
-        btnStorePickup.setOnClickListener(v ->
-                Toast.makeText(getContext(), "选择了到店取", Toast.LENGTH_SHORT).show());
+        View.OnClickListener listener = v -> {
+            if (getActivity() instanceof Activity_student_main) {
+                ((Activity_student_main) getActivity()).switchToCourseFragment();
+            }
+        };
 
-        btnDelivery.setOnClickListener(v ->
-                Toast.makeText(getContext(), "选择了喜外送", Toast.LENGTH_SHORT).show());
+        btnStorePickup.setOnClickListener(listener);
+        btnDelivery.setOnClickListener(listener);
+    }
 
-        return view;
+    private void setupImageShortcuts(View view) {
+        ImageView btnStore = view.findViewById(R.id.btn_store);
+        ImageView btnGroupMeal = view.findViewById(R.id.btn_group_meal);
+        ImageView btnGiftCard = view.findViewById(R.id.btn_gift_card);
+
+        View.OnClickListener intentLauncher = v -> {
+            Intent intent = new Intent(getActivity(), hello.class);
+            startActivity(intent);
+        };
+
+        btnStore.setOnClickListener(intentLauncher);
+        btnGroupMeal.setOnClickListener(intentLauncher);
+        btnGiftCard.setOnClickListener(intentLauncher);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        sliderHandler.removeCallbacks(sliderRunnable);
+        if (sliderHandler != null) {
+            sliderHandler.removeCallbacks(sliderRunnable);
+        }
     }
 }
-
-
-
-
-
-
-
