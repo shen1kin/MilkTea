@@ -1,16 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootCourseLayout"
+    android:background="#524C4C"
     android:layout_width="match_parent"
-     android:layout_height="match_parent">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="course"
-        app:layout_constraintEnd_toEndOf="parent"
+    <!-- 顶部：自取 | 喜外送 -->
+    <LinearLayout
+        android:id="@+id/topTabBar"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="bottom"> <!-- 使按钮附着于底部 -->
+
+        <Button
+            android:id="@+id/btnStorePickup"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:text="自取"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_background" />
+
+        <Button
+            android:id="@+id/btnDelivery"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:text="喜外送"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@drawable/button_background" />
+    </LinearLayout>
+
+
+    <!-- 搜索栏 -->
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="0dp"
+        android:layout_height="36dp"
+        android:layout_margin="12dp"
+        android:background="#EDEAEA"
+        android:drawableStart="@drawable/ic_search_scaled"
+        android:drawablePadding="8dp"
+        android:hint="搜索"
+        android:padding="8dp"
+        android:textColor="#000"
+        android:textSize="14sp"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/topTabBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- 门店信息栏 -->
+    <LinearLayout
+        android:id="@+id/layoutStoreInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        app:layout_constraintTop_toBottomOf="@+id/etSearch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/tvStoreName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⭐ 广州厦滘店 >"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/tvDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="距离您 49.0 km"
+            android:textSize="13sp"
+            android:textColor="#888888" />
+
+        <TextView
+            android:id="@+id/tvStoreDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="inspiration natural zen"
+            android:textSize="13sp"
+            android:textColor="#888888" />
+    </LinearLayout>
+
+    <!-- 主体布局：左菜单 + 右商品 -->
+    <LinearLayout
+        android:id="@+id/layoutContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/layoutStoreInfo"
+        app:layout_constraintBottom_toTopOf="@+id/layoutCartBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 左侧分类菜单 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerCategory"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#F7F7F7"
+            android:paddingTop="4dp"
+            android:clipToPadding="false" />
+
+        <!-- 右侧商品列表 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerProducts"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:padding="4dp"
+            android:clipToPadding="false" />
+    </LinearLayout>
+
+    <!-- 底部结算栏 -->
+    <LinearLayout
+        android:id="@+id/layoutCartBar"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="4dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:gravity="center_vertical"
+        android:background="#FFFFFF"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/imgCartIcon"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/gwc"
+            android:contentDescription="购物车" />
+
+        <TextView
+            android:id="@+id/tvCartTotalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="￥0"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="1dp" />
+
+        <Button
+            android:id="@+id/btnCheckout"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:text="结算"
+            android:textColor="#FFFFFF"
+            android:background="@color/black" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
