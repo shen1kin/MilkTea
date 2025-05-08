@@ -6,16 +6,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
-
-import com.example.smartstudent.R;
 
 import java.util.List;
 
 public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.SliderViewHolder> {
-    private Integer[] imageList;
+    private List<Integer> imageList;
 
-    public ImageSliderAdapter(Integer[] imageList) {
+    public ImageSliderAdapter(List<Integer> imageList) {
         this.imageList = imageList;
     }
 
@@ -28,12 +25,12 @@ public class ImageSliderAdapter extends RecyclerView.Adapter<ImageSliderAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull SliderViewHolder holder, int position) {
-        holder.imageView.setImageResource(imageList[position]);
+        holder.imageView.setImageResource(imageList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return imageList.length;
+        return imageList.size();
     }
 
     static class SliderViewHolder extends RecyclerView.ViewHolder {
