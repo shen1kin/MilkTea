@@ -108,8 +108,7 @@ public class  MainActivity extends AppCompatActivity {
                     btnLogin.setEnabled(false);
                     btnLogin.setText("登录中...");
 
-                    //与serlvet交流
-
+                    //与servlet交流
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -190,7 +189,6 @@ public class  MainActivity extends AppCompatActivity {
                                                 e.printStackTrace();
                                             }
 
-                                            Toast.makeText(getApplicationContext(), "11111准备跳转", Toast.LENGTH_SHORT).show();
 
                                         }
                                     });
@@ -313,53 +311,128 @@ public class  MainActivity extends AppCompatActivity {
                        return;
                    }
 
+                   final String finalRole;
+                   //判断是用户还是管理员
+                   if (role.equals(rolePassword)) {
+                       finalRole = "admin";
+                   }
+                   else {
+                       finalRole = "user";
+                   }
+
                    // 3. 显示加载状态
                    butRegister.setEnabled(false);
                    butRegister.setText("注册中...");
 
                    // 4. 异步执行注册（避免主线程阻塞）
-                   new Thread(() -> {
-                       long result;
-                       // 判断角色类型
-                       boolean isAdmin = role.equals(rolePassword);
-                       String userRole = isAdmin ? "admin" : "user";
+                   //与servlet交流
+                   new Thread(new Runnable() {
+                       @Override
+                       public void run() {
+                           try {
+                               URL url = new URL("http://10.0.2.2:8083/Servlet_war_exploded/register"); // 注册
+                               HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                               conn.setRequestMethod("POST");
+                               conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                               conn.setDoOutput(true);
+                               conn.setDoInput(true);
 
-                       // 执行注册
-                       result = userDao.addUser(username, account, password, userRole);
 
-                       // 回到主线程处理结果
-                       runOnUiThread(() -> {
-                           butRegister.setEnabled(true);
-                           butRegister.setText("注册");
+                               // 构造 JSON 数据
+                               JSONObject json = new JSONObject();
+                               json.put("username", username);
+                               json.put("username", username);
+                               json.put("account", account);
+                               json.put("password", password);
+                               json.put("role", finalRole);
 
-                           if (result == -1) {
-                               etUsername.setError("用户名已存在");
-                               etUsername.requestFocus();
-                           } else {
-                               // 注册成功处理
-                               Toast.makeText(MainActivity.this,
-                                       "注册成功！ID: " + result, Toast.LENGTH_SHORT).show();
+                               // 发送数据
+                               OutputStream os = conn.getOutputStream();
+                               os.write(json.toString().getBytes("UTF-8"));
+                               os.close();
 
-                               // 保存用户信息
-                               User newUser = new User((int) result, username, account, userRole);
-                               SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
-                               sharedPreferences.edit()
-                                       .putString("user", new Gson().toJson(newUser))
-                                       .apply();
+                               // 读取响应
+                               int code = conn.getResponseCode();
+                               if (code == 200) {
+                                   InputStream is = conn.getInputStream();
+                                   BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                                   final StringBuilder result = new StringBuilder();
+                                   String line;
+                                   while ((line = reader.readLine()) != null) {
+                                       result.append(line);
+                                   }
+                                   reader.close();
 
-                               // 自动登录并跳转
-//                               Intent intent = new Intent(MainActivity.this,
-//                                       isAdmin ? Activity_admin_main.class : Activity_student_main.class);
-//                               startActivity(intent);
+                                   // 更新 UI
+                                   runOnUiThread(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           butRegister.setEnabled(true);
+                                           butRegister.setText("注册");
+                                           String responseStr = result.toString();
 
-                              Intent intent = new Intent(MainActivity.this, hello.class);
-                               startActivity(intent);
-                               finish(); // 关闭注册界面
+//                                            Toast.makeText(getApplicationContext(), "注册结果: " + responseStr, Toast.LENGTH_LONG).show();
+                                           Log.d("responseStr",responseStr);
+                                           //成功登录
+                                           try {
+                                               JSONObject responseJson = new JSONObject(responseStr);
+                                               JSONObject userJson = responseJson.getJSONObject("user");
+
+                                               int id = userJson.getInt("id");
+                                               String username = userJson.getString("username");
+                                               String account = userJson.getString("account");
+                                               String role = userJson.getString("role");
+
+                                               User user = new User(id, username, account, role);
+                                               //将登录信息存储起来(JSON格式)
+                                               SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+                                               sharedPreferences.edit()
+                                                       .putString("user", new Gson().toJson(user))
+                                                       .apply();
+
+
+                                               //登录成功，跳转网页
+
+                                               Toast.makeText(getApplicationContext(), "准备跳转", Toast.LENGTH_SHORT).show();
+
+                                               boolean isAdmin = Objects.equals("admin",role);
+//                                                Intent intent = new Intent(MainActivity.this,
+//                                                        isAdmin ? Activity_admin_main.class : Activity_student_main.class);
+//                                                startActivity(intent);
+
+                                               Intent intent = new Intent(MainActivity.this, hello.class);
+                                               startActivity(intent);
+                                               //关闭当前
+                                               finish();
+
+
+                                           } catch (JSONException e) {
+                                               e.printStackTrace();
+                                           }
+
+
+                                       }
+                                   });
+                               } else {
+                                   // 错误处理
+                                   runOnUiThread(() -> {
+                                       butRegister.setEnabled(true);
+                                       butRegister.setText("注册");
+                                       Toast.makeText(getApplicationContext(), "连接失败，错误码：" + code, Toast.LENGTH_SHORT).show();
+                                   });
+                               }
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                               runOnUiThread(() -> {
+                                   butRegister.setEnabled(true);
+                                   butRegister.setText("注册");
+                                   Toast.makeText(getApplicationContext(), "异常: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                               });
                            }
-                       });
+                       }
                    }).start();
-               }
 
+               }
 
             });
 
