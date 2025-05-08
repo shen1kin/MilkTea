@@ -24,7 +24,9 @@ public class Fragment_student_home extends Fragment {
     private final Integer[] imageList = {
             R.drawable.zs1,
             R.drawable.zs2,
-            R.drawable.zs3
+            R.drawable.zs3,
+            R.drawable.zs4,
+            R.drawable.zs5
     };
 
     private List<Integer> loopedImageList;
@@ -42,7 +44,7 @@ public class Fragment_student_home extends Fragment {
 
     private void setupViewPager(View view) {
         loopedImageList = new ArrayList<>();
-        for (int i = 0; i < 3; i++) loopedImageList.addAll(Arrays.asList(imageList));
+        for (int i = 0; i < 5; i++) loopedImageList.addAll(Arrays.asList(imageList));
 
         viewPager = view.findViewById(R.id.viewPager);
         ImageSliderAdapter adapter = new ImageSliderAdapter(loopedImageList);

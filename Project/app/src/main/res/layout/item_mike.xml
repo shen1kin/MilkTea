@@ -23,7 +23,7 @@
 
         <!-- 商品名称 -->
         <TextView
-            android:id="@+id/tvItemName"
+            android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="商品名称"
@@ -32,7 +32,7 @@
 
         <!-- 商品价格 -->
         <TextView
-            android:id="@+id/tvItemPrice"
+            android:id="@+id/tvPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="￥0.00"
