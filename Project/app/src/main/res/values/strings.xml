@@ -48,6 +48,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="project_name">商品名称</string>
+    <string name="project_introduce">商品介绍</string>
+    <string name="project_img">商品图片</string>
+    <string name="add_select">添加选项</string>
+    <string name="add_project">添加商品</string>
 
 
 </resources>
