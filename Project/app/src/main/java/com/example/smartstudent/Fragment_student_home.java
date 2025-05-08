@@ -26,52 +26,35 @@ import java.util.List;
 public class Fragment_student_home extends Fragment {
 
     private ViewPager2 viewPager;
-    private final Integer[] imageList = {
-            R.drawable.zs1,  // 请确保资源名称正确
+    private Handler sliderHandler = new Handler(Looper.getMainLooper());
+    private Runnable sliderRunnable;
+    private Integer[] imageList = {
+            R.drawable.zs1,
             R.drawable.zs2,
             R.drawable.zs3
     };
-    private Handler sliderHandler;
-    private Runnable sliderRunnable;
-
-    // 图片按钮相关
-    private ImageView btnStore, btnGroupMeal, btnGiftCard;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_home, container, false);
 
-        // 初始化轮播图
-        initViewPager(view);
-
-        // 初始化图片按钮
-        initImageButtons(view);
-
-        return view;
-    }
-
-    private void initViewPager(View view) {
+        // 设置 ViewPager2 和适配器
         viewPager = view.findViewById(R.id.viewPager);
-        List<Integer> imageData = Arrays.asList(imageList);
-
-        ImageSliderAdapter adapter = new ImageSliderAdapter(imageData);
+        ImageSliderAdapter adapter = new ImageSliderAdapter(imageList);
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
 
         // 自动轮播逻辑
-        sliderHandler = new Handler(Looper.getMainLooper());
         sliderRunnable = new Runnable() {
             @Override
             public void run() {
-                int current = viewPager.getCurrentItem();
-                viewPager.setCurrentItem(current + 1, true);
-                sliderHandler.postDelayed(this, 3000);
+                int nextItem = (viewPager.getCurrentItem() + 1) % imageList.length;
+                viewPager.setCurrentItem(nextItem, true);
+                sliderHandler.postDelayed(this, 3000); // 每 3 秒轮播
             }
         };
         sliderHandler.postDelayed(sliderRunnable, 3000);
 
-        // 滑动监听
+        // 用户滑动时重置定时器
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -79,22 +62,20 @@ public class Fragment_student_home extends Fragment {
                 sliderHandler.postDelayed(sliderRunnable, 3000);
             }
         });
-    }
 
-    private void initImageButtons(View view) {
-        // 绑定控件
-        btnStore = view.findViewById(R.id.btn_store);
-        btnGroupMeal = view.findViewById(R.id.btn_group_meal);
-        btnGiftCard = view.findViewById(R.id.btn_gift_card);
+        // 设置按钮点击事件
+        Button btnStorePickup = view.findViewById(R.id.btnStorePickup);
+        Button btnDelivery = view.findViewById(R.id.btnDelivery);
 
-        // 设置点击事件
-        btnStore.setOnClickListener(v -> showToast("进入百货商城"));
-        btnGroupMeal.setOnClickListener(v -> showToast("团餐服务"));
-        btnGiftCard.setOnClickListener(v -> showToast("喜卡兑换"));
-    }
+        btnStorePickup.setOnClickListener(v ->
+                Toast.makeText(getContext(), "选择了到店取", Toast.LENGTH_SHORT).show()
+        );
 
-    private void showToast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        btnDelivery.setOnClickListener(v ->
+                Toast.makeText(getContext(), "选择了喜外送", Toast.LENGTH_SHORT).show()
+        );
+
+        return view;
     }
 
     @Override

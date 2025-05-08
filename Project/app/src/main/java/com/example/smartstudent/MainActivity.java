@@ -175,12 +175,12 @@ public class  MainActivity extends AppCompatActivity {
                                                 Toast.makeText(getApplicationContext(), "准备跳转", Toast.LENGTH_SHORT).show();
 
                                                 boolean isAdmin = Objects.equals("admin",role);
-//                                                Intent intent = new Intent(MainActivity.this,
-//                                                        isAdmin ? Activity_admin_main.class : Activity_student_main.class);
-//                                                startActivity(intent);
-
-                                                Intent intent = new Intent(MainActivity.this, hello.class);
+                                                Intent intent = new Intent(MainActivity.this,
+                                                        isAdmin ? Activity_admin_main.class : Activity_student_main.class);
                                                 startActivity(intent);
+
+//                                                Intent intent = new Intent(MainActivity.this, hello.class);
+//                                                startActivity(intent);
                                                 //关闭当前
                                                 finish();
 
