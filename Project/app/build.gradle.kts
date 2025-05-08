@@ -54,6 +54,7 @@ dependencies {
     implementation (libs.gson) // gson
     implementation ("androidx.recyclerview:recyclerview:1.3.1") //RecyclerView
     implementation ("com.google.android.material:material:1.9.0") //Material Components
+    implementation("com.jinrishici:android-sdk:1.5") // poem
 
 
     // MySQL 连接器配置

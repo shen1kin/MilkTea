@@ -49,7 +49,35 @@ public class  MainActivity extends AppCompatActivity {
 
         UserDao userDao = new UserDao(db);
 
+        //如果本地有数据就不需要登录
+        // 读取数据
+        // 读取 JSON 字符串
+        SharedPreferences sharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE);
+        String userJson = sharedPreferences.getString("user", null);
 
+        // 反序列化为 User 对象
+        User user = null;
+        if (userJson != null) {
+            Gson gson = new Gson();
+            //获取到user
+            user = gson.fromJson(userJson, User.class);
+
+            //登录成功，跳转网页
+
+            Toast.makeText(getApplicationContext(), "已经登录，准备跳转", Toast.LENGTH_SHORT).show();
+
+            //休眠0.5s 防止太快
+//            try {
+//                Thread.sleep(3000);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+
+            boolean isAdmin = Objects.equals("admin",user.getRole());
+            Intent intent = new Intent(MainActivity.this,
+                    isAdmin ? Activity_admin_main.class : Activity_student_main.class);
+            startActivity(intent);
+        }
 
 
 
@@ -396,12 +424,12 @@ public class  MainActivity extends AppCompatActivity {
                                                Toast.makeText(getApplicationContext(), "准备跳转", Toast.LENGTH_SHORT).show();
 
                                                boolean isAdmin = Objects.equals("admin",role);
-//                                                Intent intent = new Intent(MainActivity.this,
-//                                                        isAdmin ? Activity_admin_main.class : Activity_student_main.class);
-//                                                startActivity(intent);
+                                                Intent intent = new Intent(MainActivity.this,
+                                                        isAdmin ? Activity_admin_main.class : Activity_student_main.class);
+                                                startActivity(intent);
 
-                                               Intent intent = new Intent(MainActivity.this, hello.class);
-                                               startActivity(intent);
+//                                               Intent intent = new Intent(MainActivity.this, hello.class);
+//                                               startActivity(intent);
                                                //关闭当前
                                                finish();
 

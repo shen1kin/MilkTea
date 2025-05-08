@@ -1,16 +1,31 @@
 package com.example.smartstudent;
 
+import static android.content.ContentValues.TAG;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartstudent.adapter.VipServiceAdapter;
+import com.example.smartstudent.model.User;
 import com.example.smartstudent.model.VipserveItem;
+import com.google.gson.Gson;
+import com.jinrishici.sdk.android.JinrishiciClient;
+import com.jinrishici.sdk.android.listener.JinrishiciCallback;
+import com.jinrishici.sdk.android.model.JinrishiciRuntimeException;
+import com.jinrishici.sdk.android.model.PoetySentence;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +41,7 @@ public class Fragment_student_profile extends Fragment {
         services.add(new VipserveItem("任务中心", R.drawable.task_centres, hello.class));
         services.add(new VipserveItem("发票助手", R.drawable.receipt, hello.class));
         services.add(new VipserveItem("联系客服", R.drawable.service, hello.class));
-        services.add(new VipserveItem("设置", R.drawable.set, hello.class));
+        services.add(new VipserveItem("设置", R.drawable.set, Activity_student_set.class));
         services.add(new VipserveItem("更多", R.drawable.more, hello.class));
 
         // 设置RecyclerView
@@ -40,4 +55,53 @@ public class Fragment_student_profile extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //获取名字
+
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+        String userJson = sharedPreferences.getString("user", null);
+
+        User user = null;
+        if (userJson != null) {
+            Gson gson = new Gson();
+            user = gson.fromJson(userJson, User.class);
+        }
+
+        TextView tvName = view.findViewById(R.id.tvName);
+        tvName.setText(user.getAccount());
+
+
+
+        //诗词展示
+        TextView tvPoem = view.findViewById(R.id.tvPoem);
+        TextView tvAuthor = view.findViewById(R.id.tvAuthor);
+
+        JinrishiciClient.getInstance().init(getContext());
+        JinrishiciClient client = JinrishiciClient.getInstance();
+        client.getOneSentenceBackground(new JinrishiciCallback() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void done(PoetySentence poetySentence) {
+                // 设置诗句内容
+                tvPoem.setText(poetySentence.getData().getContent());
+
+                // 设置作者信息
+                String author = poetySentence.getData().getOrigin().getAuthor();
+                tvAuthor.setText("— " + author);
+            }
+
+            @Override
+            public void error(JinrishiciRuntimeException e) {
+                Log.w(TAG, "error: code = " + e.getCode() + " message = " + e.getMessage());
+                //TODO do something else
+                //手动设置
+            }
+        });
+
+
+    }
+
 }
