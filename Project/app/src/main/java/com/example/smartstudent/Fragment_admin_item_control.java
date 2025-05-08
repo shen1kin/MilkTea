@@ -1,5 +1,6 @@
 package com.example.smartstudent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -93,6 +95,7 @@ public class Fragment_admin_item_control extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         //获取名字
         LinearLayout buttonLayout = view.findViewById(R.id.buttonLayout);
         RecyclerView rvItemList = view.findViewById(R.id.recyclerView);
@@ -106,6 +109,17 @@ public class Fragment_admin_item_control extends Fragment {
                     // 向上滑动，显示按钮
                     buttonLayout.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        //添加商品按钮
+        Button butAddItem = view.findViewById(R.id.butAddItem);
+        butAddItem.setOnClickListener(new View.OnClickListener() {
+            //跳转到添加界面
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(requireContext(), Activity_admin_AddItem.class);
+                startActivity(intent);
             }
         });
 
