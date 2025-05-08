@@ -12,7 +12,7 @@ public class User {
     // 构造方法
     public User() {
     }
-    //登录
+    //注册
     public User(int id, String username, String account,String password, String role, String created_at) {
         this.id = id;
         this.username = username;
@@ -22,11 +22,17 @@ public class User {
         this.created_at = created_at;
 
     }
-    //注册
-    public User(String username, String account, String password) {
+    //登录
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User(int id, String username, String account, String role) {
+        this.id = id;
+        this.username = username;
         this.account = account;
+        this.role = role;
     }
 
     // Getter 和 Setter 方法

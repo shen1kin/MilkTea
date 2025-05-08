@@ -56,4 +56,42 @@ public class UserDao {
         return Optional.empty();
     }
 
+    // 添加用户
+    public Optional<User> addUser(String username, String account, String password, String role) {
+        // 查询是否已存在该用户名
+        Optional<User> userOpt = findByUsername(username);
+
+        // 如果不存在，才允许注册
+        if (!userOpt.isPresent()) {
+            String sql = "INSERT INTO users (username, account, password, role) VALUES (?, ?, ?, ?)";
+
+            try (Connection conn = DBUtil.getConnection();
+                 //执行插入语句时返回自动生成的主键（通常是自增主键 id）
+                 PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+                stmt.setString(1, username);
+                stmt.setString(2, account);
+                stmt.setString(3, password);
+                stmt.setString(4, role);
+
+                int rows = stmt.executeUpdate();
+                if (rows > 0) {
+                    // 获取自增ID
+                    ResultSet generatedKeys = stmt.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        int id = generatedKeys.getInt(1);
+
+                        User user = new User(id, username, account, role);
+                        return Optional.of(user);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return Optional.empty(); // 用户已存在或插入失败
+    }
+
+
 }
