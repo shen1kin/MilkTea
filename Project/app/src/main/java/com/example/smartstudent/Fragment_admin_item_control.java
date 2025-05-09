@@ -78,7 +78,6 @@ public class Fragment_admin_item_control extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = datas.get(position); // 获取选中项
-                Toast.makeText(requireContext(), "你选择了: " + selected, Toast.LENGTH_SHORT).show();
             }
 
             @Override
