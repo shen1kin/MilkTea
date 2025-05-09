@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:padding="5dp"
+    >
 
     <!-- 顶部搜索栏区域 -->
     <com.google.android.material.appbar.AppBarLayout
@@ -13,7 +15,8 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         android:fitsSystemWindows="true"
-        android:background="@null"
+        android:stateListAnimator="@null"
+        android:elevation="0dp"
         >
 
         <LinearLayout
@@ -24,7 +27,8 @@
             android:padding="5dp"
             android:background="@drawable/item_bg_search"
             android:gravity="center"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlways"
+            >
 
             <Spinner
                 android:id="@+id/spSearchList"
@@ -54,6 +58,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="10dp"
+                android:stateListAnimator="@null"
+                android:elevation="0dp"
                 android:background="@drawable/search" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -85,6 +91,8 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:stateListAnimator="@null"
+            android:elevation="0dp"
             android:text="添加商品" />
 
         <Button
@@ -96,6 +104,8 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:stateListAnimator="@null"
+            android:elevation="0dp"
             android:text="删除商品" />
     </LinearLayout>
 

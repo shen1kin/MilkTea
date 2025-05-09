@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="12dp"
-    android:background="#EEEEEE"
+    android:background="@drawable/bigcardcontainer"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
