@@ -6,7 +6,6 @@
     android:minHeight="300dp"
     android:background="@color/white"
     android:padding="16dp"
-
     >
 
     <LinearLayout
@@ -14,8 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginBottom="20dp"
-
+        android:layout_marginBottom="5dp"
         >
 
             <TextView
@@ -28,7 +26,6 @@
                 android:textStyle="bold"
                 android:textSize="24sp"
                 android:textColor="@color/black"
-
         />
 
         <View
@@ -40,7 +37,7 @@
 
     <!--  添加选项信息  -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewOptions"
+        android:id="@+id/rvSelectOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
