@@ -1,0 +1,48 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:minHeight="300dp"
+    android:background="@color/white"
+    android:padding="16dp"
+
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="20dp"
+
+        >
+
+            <TextView
+                android:id="@+id/tvAddSelectTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="可添加选项"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:textColor="@color/black"
+
+        />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/layout_shadow_bottom" />
+
+    </LinearLayout>
+
+    <!--  添加选项信息  -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>
