@@ -25,6 +25,9 @@
         <activity
             android:name=".hello"
             android:exported="true" />
+        <activity android:name=".SearchActivity"
+            android:exported="true"/>
+
         <activity
             android:name=".Activity_admin_main"
             android:exported="true" />

@@ -1,9 +1,11 @@
 package com.example.smartstudent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,6 +39,13 @@ public class Fragment_student_course extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_student_course, container, false);
+
+        TextView etSearch = view.findViewById(R.id.etSearch);
+        etSearch.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            startActivity(intent);
+        });
+
 
         recyclerCategory = view.findViewById(R.id.recyclerCategory);
         recyclerProducts = view.findViewById(R.id.recyclerProducts);
