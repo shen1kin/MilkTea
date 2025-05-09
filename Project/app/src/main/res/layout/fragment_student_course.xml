@@ -7,53 +7,80 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 顶部：自取 | 喜外送 -->
-    <LinearLayout
+    <!-- 顶部：自取 | 喜外送        搜索-->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topTabBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:padding="12dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/btnStorePickup"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:text="自取"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:background="@drawable/button_background" />
+        <!-- 左侧按钮组：自取 | 喜外送 -->
+        <LinearLayout
+            android:id="@+id/tabButtonsGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <Button
-            android:id="@+id/btnDelivery"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:text="喜外送"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:background="@drawable/button_background" />
+            <Button
+                android:id="@+id/btnStorePickup"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:text="自取"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/tab_button_background"
+                android:layout_marginEnd="4dp" />
 
+            <View
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:background="#CCCCCC" />
+
+            <Button
+                android:id="@+id/btnDelivery"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:text="喜外送"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:background="@drawable/tab_button_background"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
+
+        <!-- 搜索按钮靠右 -->
         <TextView
             android:id="@+id/etSearch"
-            android:layout_width="0dp"
+            android:layout_width="80dp"
             android:layout_height="40dp"
-            android:layout_weight="2"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="12dp"
             android:background="@drawable/search_bar_background"
             android:drawableStart="@drawable/ic_search_scaled"
-            android:drawablePadding="8dp"
+            android:drawablePadding="6dp"
             android:gravity="center_vertical"
+            android:paddingStart="10dp"
             android:text="搜索"
             android:textColor="#666666"
             android:textSize="14sp"
             android:clickable="true"
-            android:focusable="true"/>
-    </LinearLayout>
+            android:focusable="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:alpha="0.8"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
     <!-- 门店信息栏 -->
     <LinearLayout
@@ -135,19 +162,37 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:gravity="center_vertical"
-        android:background="#FFFFFF"
+        android:background="#F0F0F0"
         android:elevation="4dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/imgCartIcon"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@drawable/gwc"
-            android:contentDescription="购物车" />
+        <FrameLayout
+            android:id="@+id/cartIconWrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imgCartIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/gwc"
+                android:contentDescription="购物车" />
+
+            <TextView
+                android:id="@+id/tvCartBadge"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="end|top"
+                android:background="@drawable/red_circle"
+                android:text="0"
+                android:textSize="10sp"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/tvCartTotalPrice"
@@ -161,13 +206,13 @@
 
         <View
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="1dp" />
 
         <Button
             android:id="@+id/btnCheckout"
-            android:layout_width="80dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
             android:text="结算"
             android:textColor="#FFFFFF"
             android:background="@color/black" />

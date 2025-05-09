@@ -1,5 +1,7 @@
 package com.example.smartstudent.model;
 
+import java.util.Objects;
+
 public class ProductInfo {
     private String name;
     private String price;
@@ -11,6 +13,7 @@ public class ProductInfo {
         this.category = category;
     }
 
+    // 👉 添加 getter 方法
     public String getName() {
         return name;
     }
@@ -22,4 +25,17 @@ public class ProductInfo {
     public String getCategory() {
         return category;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof ProductInfo)) return false;
+        ProductInfo other = (ProductInfo) obj;
+        return name.equals(other.name) && price.equals(other.price) && category.equals(other.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, price, category);
+    }
+
 }

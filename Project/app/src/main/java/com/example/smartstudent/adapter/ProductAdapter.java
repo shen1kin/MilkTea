@@ -1,14 +1,20 @@
 package com.example.smartstudent.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smartstudent.Fragment_student_course;
 import com.example.smartstudent.R;
+import com.example.smartstudent.cart.CartManager;
 import com.example.smartstudent.model.ProductInfo;
 
 import java.util.List;
@@ -26,11 +32,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        if (itemList.get(position) instanceof String) {
-            return TYPE_HEADER;
-        } else {
-            return TYPE_ITEM;
-        }
+        return itemList.get(position) instanceof String ? TYPE_HEADER : TYPE_ITEM;
     }
 
     @Override
@@ -64,6 +66,23 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ProductViewHolder vh = (ProductViewHolder) holder;
             vh.tvName.setText(product.getName());
             vh.tvPrice.setText(product.getPrice());
+
+            // 点击加入购物车
+            vh.btnAddToCart.setOnClickListener(v -> {
+                CartManager.add(product); // 添加商品到购物车
+                Toast.makeText(v.getContext(), "已加入购物车", Toast.LENGTH_SHORT).show();
+
+                // 通知 Fragment 更新角标
+                Context context = v.getContext();
+                if (context instanceof FragmentActivity) {
+                    FragmentActivity activity = (FragmentActivity) context;
+                    Fragment_student_course fragment = (Fragment_student_course)
+                            activity.getSupportFragmentManager().findFragmentByTag("f1");
+                    if (fragment != null) {
+                        fragment.updateCartBadge();
+                    }
+                }
+            });
         }
     }
 
@@ -78,11 +97,13 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvPrice;
+        Button btnAddToCart;
 
         ProductViewHolder(View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tvName);
             tvPrice = itemView.findViewById(R.id.tvPrice);
+            btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
         }
     }
 }

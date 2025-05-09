@@ -4,22 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="12dp">
 
     <!-- 返回按钮 -->
     <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:scaleType="centerInside"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_arrow_back"
         android:contentDescription="返回"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- 搜索输入框 -->
     <EditText
@@ -28,24 +25,39 @@
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/search_bar_background"
-        android:hint="输入关键词"
-        android:padding="8dp"
+        android:hint="请输入关键词"
+        android:paddingHorizontal="12dp"
+        android:textColor="#000000"
         android:textSize="14sp"
         android:inputType="text"
         app:layout_constraintStart_toEndOf="@id/btnBack"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvDoSearch" />
+
+    <!-- 搜索按钮 -->
+    <TextView
+        android:id="@+id/tvDoSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="搜索"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:paddingHorizontal="12dp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="@id/editSearch"
+        app:layout_constraintBottom_toBottomOf="@id/editSearch"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSearch"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/editSearch"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- 搜索结果区域（待扩展） -->
-    <TextView
-        android:id="@+id/tvEmpty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="这里是搜索页面"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/editSearch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
