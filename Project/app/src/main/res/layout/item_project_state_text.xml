@@ -1,0 +1,38 @@
+<!-- res/layout/status_module.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@drawable/bigcardcontainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/etTitle"
+            android:text="状态名"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnAddOpt"
+            android:background="@drawable/add"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+    </LinearLayout>
+
+    <!-- 选项显示区域：使用 ChipGroup 或 LinearLayout -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:chipSpacing="4dp" />
+</LinearLayout>

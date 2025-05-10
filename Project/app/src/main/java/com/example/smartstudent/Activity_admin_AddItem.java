@@ -1,7 +1,6 @@
 package com.example.smartstudent;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,16 +8,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,7 +19,6 @@ import com.example.smartstudent.adapter.OptionAdapter;
 import com.example.smartstudent.adapter.StateAdapter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import java.util.Set;
 import java.util.HashSet;
@@ -132,7 +124,7 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         // 将 status_module.xml 实例化为 View 对象
         // 将布局 XML 文件实例化为其对应的View 对象。它不会直接使用。
         // 而是使用 Activity.getLayoutInflater()或 Context.getSystemService来获取一个已连接到当前上下文并针对您正在运行的设备正确配置的标准 LayoutInflater 实例。
-        View moduleView = inflater.inflate(R.layout.item_project_state, statusContainer, false);
+        View moduleView = inflater.inflate(R.layout.item_project_state_edit, statusContainer, false);
 
         // 获取子控件
         EditText etTitle = moduleView.findViewById(R.id.etTitle);

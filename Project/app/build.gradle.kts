@@ -55,6 +55,7 @@ dependencies {
     implementation ("androidx.recyclerview:recyclerview:1.3.1") //RecyclerView CoordinatorLayout
     implementation ("com.google.android.material:material:1.9.0") //Material Components
     implementation("com.jinrishici:android-sdk:1.5") // poem
+    implementation ("androidx.appcompat:appcompat:1.6.1") //AppCompat
 
 
 
