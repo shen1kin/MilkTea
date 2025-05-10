@@ -1,18 +1,16 @@
 package com.example.smartstudent.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.smartstudent.Fragment_student_course;
 import com.example.smartstudent.R;
 import com.example.smartstudent.cart.CartManager;
 import com.example.smartstudent.model.ProductInfo;
@@ -21,10 +19,20 @@ import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ITEM = 1;
+    private static final int TYPE_TITLE = 0;
+    private static final int TYPE_PRODUCT = 1;
 
-    private List<Object> itemList;
+    private final List<Object> itemList;
+
+    public interface OnAddToCartListener {
+        void onAdd();
+    }
+
+    private OnAddToCartListener addToCartListener;
+
+    public void setOnAddToCartListener(OnAddToCartListener listener) {
+        this.addToCartListener = listener;
+    }
 
     public ProductAdapter(List<Object> itemList) {
         this.itemList = itemList;
@@ -32,22 +40,16 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return itemList.get(position) instanceof String ? TYPE_HEADER : TYPE_ITEM;
-    }
-
-    @Override
-    public int getItemCount() {
-        return itemList.size();
+        return itemList.get(position) instanceof String ? TYPE_TITLE : TYPE_PRODUCT;
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(
-            @NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEADER) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_TITLE) {
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_header, parent, false);
-            return new HeaderViewHolder(view);
+                    .inflate(android.R.layout.simple_list_item_1, parent, false);
+            return new TitleViewHolder(view);
         } else {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_mike, parent, false);
@@ -56,53 +58,53 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(
-            @NonNull RecyclerView.ViewHolder holder, int position) {
-        if (getItemViewType(position) == TYPE_HEADER) {
-            String title = (String) itemList.get(position);
-            ((HeaderViewHolder) holder).tvHeader.setText(title);
-        } else {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof TitleViewHolder) {
+            ((TitleViewHolder) holder).title.setText((String) itemList.get(position));
+        } else if (holder instanceof ProductViewHolder) {
             ProductInfo product = (ProductInfo) itemList.get(position);
-            ProductViewHolder vh = (ProductViewHolder) holder;
-            vh.tvName.setText(product.getName());
-            vh.tvPrice.setText(product.getPrice());
+            ProductViewHolder h = (ProductViewHolder) holder;
 
-            // 点击加入购物车
-            vh.btnAddToCart.setOnClickListener(v -> {
-                CartManager.add(product); // 添加商品到购物车
+            h.name.setText(product.getName());
+            h.price.setText(product.getPrice());
+            // 如果有图片字段可以设置 h.image.setImageResource 或 setImageURI
+
+            h.btnAddToCart.setOnClickListener(v -> {
+                CartManager.add(product);
                 Toast.makeText(v.getContext(), "已加入购物车", Toast.LENGTH_SHORT).show();
 
-                // 通知 Fragment 更新角标
-                Context context = v.getContext();
-                if (context instanceof FragmentActivity) {
-                    FragmentActivity activity = (FragmentActivity) context;
-                    Fragment_student_course fragment = (Fragment_student_course)
-                            activity.getSupportFragmentManager().findFragmentByTag("f1");
-                    if (fragment != null) {
-                        fragment.updateCartBadge();
-                    }
+                // ✅ 通知外部刷新角标和总价
+                if (addToCartListener != null) {
+                    addToCartListener.onAdd();
                 }
             });
         }
     }
 
-    static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvHeader;
+    @Override
+    public int getItemCount() {
+        return itemList.size();
+    }
 
-        HeaderViewHolder(View itemView) {
+    static class TitleViewHolder extends RecyclerView.ViewHolder {
+        TextView title;
+
+        public TitleViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvHeader = itemView.findViewById(R.id.tvHeader);
+            title = itemView.findViewById(android.R.id.text1);
         }
     }
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView tvName, tvPrice;
+        TextView name, price;
         Button btnAddToCart;
+        ImageView image;
 
-        ProductViewHolder(View itemView) {
+        public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvPrice = itemView.findViewById(R.id.tvPrice);
+            name = itemView.findViewById(R.id.tvName);
+            price = itemView.findViewById(R.id.tvPrice);
+            image = itemView.findViewById(R.id.itemImage);
             btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
         }
     }

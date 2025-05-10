@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,10 +35,10 @@ public class Fragment_student_course extends Fragment {
     private ProductAdapter productAdapter;
 
     private Button btnStorePickup, btnDelivery;
-    private TextView etSearch;
+    private TextView etSearch, cartBadge, cartTotal;
 
     private List<Category> categoryList = new ArrayList<>();
-    private List<Object> productList = new ArrayList<>(); // 包含标题（String）和商品（ProductInfo）
+    private List<Object> productList = new ArrayList<>();
 
     private boolean isScrollByClick = false;
 
@@ -51,57 +50,37 @@ public class Fragment_student_course extends Fragment {
         View view = inflater.inflate(R.layout.fragment_student_course, container, false);
 
         ImageView cartIcon = view.findViewById(R.id.imgCartIcon);
+        cartBadge = view.findViewById(R.id.tvCartBadge);
+        cartTotal = view.findViewById(R.id.tvCartTotalPrice); // 总价 TextView 初始化
+        etSearch = view.findViewById(R.id.etSearch);
+        btnStorePickup = view.findViewById(R.id.btnStorePickup);
+        btnDelivery = view.findViewById(R.id.btnDelivery);
+        Button btnCheckout = view.findViewById(R.id.btnCheckout);
+
+        recyclerCategory = view.findViewById(R.id.recyclerCategory);
+        recyclerProducts = view.findViewById(R.id.recyclerProducts);
+
         cartIcon.setOnClickListener(v -> showCartDialog());
 
-        // 搜索按钮点击跳转
-        etSearch = view.findViewById(R.id.etSearch);
         etSearch.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), SearchActivity.class);
             startActivity(intent);
         });
 
-        TextView cartTotal = view.findViewById(R.id.tvCartTotalPrice);
+        btnCheckout.setOnClickListener(v ->
+                startActivity(new Intent(getActivity(), Activity_checkout.class))
+        );
 
-        cartIcon.setOnClickListener(v -> {
-            BottomSheetDialog dialog = new BottomSheetDialog(getContext());
-            View sheetView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_cart, null);
-            RecyclerView recycler = sheetView.findViewById(R.id.recyclerCart);
-            recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-            recycler.setAdapter(new CartAdapter(CartManager.getItems()));
-            dialog.setContentView(sheetView);
-            dialog.show();
-        });
-
-        Button btnCheckout = view.findViewById(R.id.btnCheckout);
-        btnCheckout.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), Activity_checkout.class));
-        });
-
-        // 自取/喜外送按钮绑定
-        btnStorePickup = view.findViewById(R.id.btnStorePickup);
-        btnDelivery = view.findViewById(R.id.btnDelivery);
-
-        // 设置默认状态（自取被选中）
         setButtonState(true);
-
-        btnStorePickup.setOnClickListener(v -> {
-            setButtonState(true);
-            // TODO: 加载“自取”相关数据
-        });
-
-        btnDelivery.setOnClickListener(v -> {
-            setButtonState(false);
-            // TODO: 加载“喜外送”相关数据
-        });
-
-        // 绑定 RecyclerView
-        recyclerCategory = view.findViewById(R.id.recyclerCategory);
-        recyclerProducts = view.findViewById(R.id.recyclerProducts);
+        btnStorePickup.setOnClickListener(v -> setButtonState(true));
+        btnDelivery.setOnClickListener(v -> setButtonState(false));
 
         initCategoryData();
         initProductData();
         setupCategoryRecycler();
         setupProductRecycler();
+
+        updateCartBadge(); // 页面初始化时更新角标和价格
 
         return view;
     }
@@ -132,7 +111,7 @@ public class Fragment_student_course extends Fragment {
         productList.clear();
         String[] categories = {"时令上新", "超级植物茶", "鲜果茶", "原叶茗茶", "浓郁牛乳茶", "灵感茶点小料"};
         for (String category : categories) {
-            productList.add(category); // 标题
+            productList.add(category);
             for (int i = 1; i <= 5; i++) {
                 productList.add(new ProductInfo(category + " 商品 " + i, "¥" + (10 + i), category));
             }
@@ -143,27 +122,24 @@ public class Fragment_student_course extends Fragment {
         categoryAdapter = new CategoryAdapter(categoryList, position -> {
             isScrollByClick = true;
             updateCategorySelection(position);
-
-            // 滚动商品列表到对应分类
             String selectedCategory = categoryList.get(position).name;
             for (int i = 0; i < productList.size(); i++) {
-                if (productList.get(i) instanceof String) {
-                    if (productList.get(i).equals(selectedCategory)) {
-                        recyclerProducts.scrollToPosition(i);
-                        break;
-                    }
+                if (productList.get(i) instanceof String &&
+                        productList.get(i).equals(selectedCategory)) {
+                    recyclerProducts.scrollToPosition(i);
+                    break;
                 }
             }
         });
-
         recyclerCategory.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerCategory.setAdapter(categoryAdapter);
     }
 
     private void setupProductRecycler() {
         productAdapter = new ProductAdapter(productList);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        productAdapter.setOnAddToCartListener(() -> updateCartBadge());
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerProducts.setLayoutManager(layoutManager);
         recyclerProducts.setAdapter(productAdapter);
 
@@ -174,7 +150,6 @@ public class Fragment_student_course extends Fragment {
                     isScrollByClick = false;
                     return;
                 }
-
                 LinearLayoutManager lm = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (lm != null) {
                     int firstVisible = lm.findFirstVisibleItemPosition();
@@ -187,6 +162,7 @@ public class Fragment_student_course extends Fragment {
         });
     }
 
+
     private void showCartDialog() {
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         View sheetView = LayoutInflater.from(getContext())
@@ -198,12 +174,18 @@ public class Fragment_student_course extends Fragment {
 
         List<CartItem> items = CartManager.getItems();
         CartAdapter adapter = new CartAdapter(items);
+
+        adapter.setOnCartChangeListener(() -> {
+            updateCartBadge(); // 更新角标和主界面价格
+            tvTotal.setText("合计：" + CartManager.getTotalPrice()); // 更新弹窗总价
+        });
+
         cartRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         cartRecycler.setAdapter(adapter);
 
         tvTotal.setText("合计：" + CartManager.getTotalPrice());
+
         btnCheckout.setOnClickListener(v -> {
-            // 跳转结算页面
             dialog.dismiss();
             startActivity(new Intent(getActivity(), Activity_checkout.class));
         });
@@ -213,10 +195,13 @@ public class Fragment_student_course extends Fragment {
     }
 
     public void updateCartBadge() {
+        if (cartBadge == null || cartTotal == null) return;
+
         int count = CartManager.getTotalCount();
-        TextView badge = getView().findViewById(R.id.tvCartBadge); // 你需要在布局中定义这个角标 TextView
-        badge.setText(String.valueOf(count));
-        badge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+        cartBadge.setText(String.valueOf(count));
+        cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
+
+        cartTotal.setText(CartManager.getTotalPrice());
     }
 
     private void updateCategorySelection(int selectedIndex) {

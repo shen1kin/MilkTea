@@ -1,9 +1,16 @@
 package com.example.smartstudent.adapter;
 
-import android.view.*;
-import android.widget.*;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.smartstudent.R;
 import com.example.smartstudent.cart.CartManager;
 import com.example.smartstudent.model.CartItem;
@@ -22,7 +29,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.cartChangeListener = listener;
     }
 
-
     private List<CartItem> items;
 
     public CartAdapter(List<CartItem> items) {
@@ -30,14 +36,17 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {
-        TextView name, price, count;
-        Button btnAdd, btnMinus, btnDelete;
+        TextView tvName, tvPrice, tvCount, tvSpec;
+        ImageView itemImage;
+        ImageButton btnAdd, btnMinus, btnDelete;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.tvName);
-            price = itemView.findViewById(R.id.tvPrice);
-            count = itemView.findViewById(R.id.tvCount);
+            itemImage = itemView.findViewById(R.id.itemImage);
+            tvName = itemView.findViewById(R.id.tvName);
+            tvPrice = itemView.findViewById(R.id.tvPrice);
+            tvCount = itemView.findViewById(R.id.tvCount);
+            tvSpec = itemView.findViewById(R.id.tvSpec);
             btnAdd = itemView.findViewById(R.id.btnAdd);
             btnMinus = itemView.findViewById(R.id.btnMinus);
             btnDelete = itemView.findViewById(R.id.btnDelete);
@@ -54,9 +63,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         CartItem item = items.get(position);
-        holder.name.setText(item.product.getName());
-        holder.price.setText(item.product.getPrice());
-        holder.count.setText(String.valueOf(item.count));
+
+        holder.tvName.setText(item.product.getName());
+        holder.tvPrice.setText(item.product.getPrice());
+        holder.tvCount.setText(String.valueOf(item.count));
+
+        // 设置规格字段，如无可使用默认描述
+        holder.tvSpec.setText("默认规格");
+
+        // 显示图片（如有字段可接入 Glide 等加载器）
+        holder.itemImage.setImageResource(R.drawable.ic_launcher_background);
 
         holder.btnAdd.setOnClickListener(v -> {
             CartManager.add(item.product);
@@ -73,11 +89,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.btnDelete.setOnClickListener(v -> {
             CartManager.remove(item.product);
             refresh();
+            Toast.makeText(v.getContext(), "已删除商品", Toast.LENGTH_SHORT).show();
             if (cartChangeListener != null) cartChangeListener.onCartChanged();
         });
-
     }
-
 
     private void refresh() {
         items = CartManager.getItems();
@@ -88,6 +103,4 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public int getItemCount() {
         return items.size();
     }
-
-
 }
