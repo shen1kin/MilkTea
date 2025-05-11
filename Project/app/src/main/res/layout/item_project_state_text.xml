@@ -15,7 +15,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/etTitle"
+            android:id="@+id/tvTitle"
             android:text="状态名"
             android:textSize="16sp"
             android:layout_weight="1"

@@ -43,7 +43,7 @@ public class LoginServlet extends HttpServlet {
         while ((line = reader.readLine()) != null) {
             sb.append(line);
         }
-
+        reader.close();
         // 构建用于响应给客户端的 JSON 对象，用于返回
         JSONObject result = new JSONObject();
 
