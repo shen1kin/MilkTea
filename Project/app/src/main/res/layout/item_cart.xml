@@ -68,10 +68,11 @@
 
         <ImageButton
             android:id="@+id/btnMinus"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:background="@null"
             android:src="@drawable/jianshao"
+            android:scaleType="fitCenter"
             android:contentDescription="减少" />
 
         <TextView
@@ -80,14 +81,15 @@
             android:layout_height="32dp"
             android:gravity="center"
             android:text="1"
-            android:textSize="14sp" />
+            android:textSize="20sp" />
 
         <ImageButton
             android:id="@+id/btnAdd"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:background="@null"
             android:src="@drawable/zengjia"
+            android:scaleType="fitCenter"
             android:contentDescription="增加" />
     </LinearLayout>
 
@@ -100,6 +102,7 @@
         android:src="@drawable/shanchu"
         android:contentDescription="删除"
         app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="fitCenter"
         app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

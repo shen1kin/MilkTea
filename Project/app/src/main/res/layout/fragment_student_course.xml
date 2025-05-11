@@ -100,7 +100,7 @@
             android:id="@+id/tvStoreName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="⭐ 广州厦滘店 >"
+            android:text="⭐ 广州软件学院店 >"
             android:textStyle="bold"
             android:textSize="16sp"
             android:textColor="#FFFFFF" />
@@ -109,7 +109,7 @@
             android:id="@+id/tvDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="距离您 49.0 km"
+            android:text="距离您 500 m"
             android:textSize="13sp"
             android:textColor="#888888" />
 

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- 支付宝 -->
+    <LinearLayout
+        android:id="@+id/optionAlipay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="4dp">
+
+        <!-- 左侧图标 -->
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/activity_main_background" />
+
+        <!-- 中间文字 -->
+        <TextView
+            android:layout_width="329dp"
+            android:layout_height="wrap_content"
+
+            android:text="支付宝"
+            android:textSize="16sp"
+            android:paddingStart="12dp"
+            android:textColor="#000000" />
+
+        <!-- 右侧选中图标 -->
+        <ImageView
+            android:id="@+id/imgCheckAlipay"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/xuanzhong"
+             />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#dddddd" />
+
+    <!-- 微信 -->
+    <LinearLayout
+        android:id="@+id/optionWechat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="12dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/activity_main_background" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="微信支付"
+            android:textSize="16sp"
+            android:paddingStart="12dp"
+            android:textColor="#000000" />
+
+        <ImageView
+            android:id="@+id/imgCheckWechat"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/xuanzhong" />
+    </LinearLayout>
+
+</LinearLayout>
