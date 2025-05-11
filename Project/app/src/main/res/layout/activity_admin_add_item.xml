@@ -119,10 +119,10 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@string/add_select" />
+            android:text="添加状态" />
 
         <Button
-            android:id="@+id/butDelItem"
+            android:id="@+id/butConfirmAddItem"
             android:background="@drawable/button_bg_additem"
             android:layout_width="wrap_content"
             android:layout_weight="1"

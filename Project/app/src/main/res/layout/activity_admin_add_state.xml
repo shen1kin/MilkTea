@@ -36,10 +36,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@id/layoutTitle"
-        android:layout_above="@id/butAddState" />
+        android:layout_above="@id/butAddNewState" />
 
     <Button
-        android:id="@+id/butAddState"
+        android:id="@+id/butAddNewState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -17,40 +17,35 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Activity_admin_add_new_state"
+            android:exported="true" />
+        <activity
             android:name=".Activity_admin_AddItem"
             android:exported="true" />
-
         <activity
             android:name=".CheckoutActivity"
             android:exported="true" />
-
         <activity
             android:name=".Activity_student_set"
             android:exported="true" />
-
         <activity
             android:name=".hello"
             android:exported="true" />
-
         <activity
             android:name=".Activity_checkout"
             android:exported="true" />
-
-        <activity android:name=".SearchActivity"
-            android:exported="true"/>
-
+        <activity
+            android:name=".SearchActivity"
+            android:exported="true" />
         <activity
             android:name=".Activity_admin_main"
             android:exported="true" />
-
         <activity
             android:name=".Activity_student_main"
             android:exported="true" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
