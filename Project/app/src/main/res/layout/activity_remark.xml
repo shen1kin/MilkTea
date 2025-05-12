@@ -12,7 +12,7 @@
         android:layout_height="150dp"
         android:background="@drawable/bg_remark_box"
         android:hint="请输入备注信息"
-        android:gravity="top|start"
+        android:gravity="top"
         android:padding="12dp"
         android:textSize="14sp"
         android:inputType="textMultiLine" />

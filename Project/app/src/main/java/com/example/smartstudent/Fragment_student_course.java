@@ -68,7 +68,7 @@ public class Fragment_student_course extends Fragment {
         });
 
         btnCheckout.setOnClickListener(v ->
-                startActivity(new Intent(getActivity(), Activity_checkout.class))
+                startActivity(new Intent(getActivity(), CheckoutActivity.class))
         );
 
         setButtonState(true);
@@ -187,7 +187,7 @@ public class Fragment_student_course extends Fragment {
 
         btnCheckout.setOnClickListener(v -> {
             dialog.dismiss();
-            startActivity(new Intent(getActivity(), Activity_checkout.class));
+            startActivity(new Intent(getActivity(), CheckoutActivity.class));
         });
 
         dialog.setContentView(sheetView);
