@@ -23,6 +23,9 @@
             android:name=".Activity_admin_AddItem"
             android:exported="true" />
         <activity
+            android:name=".RemarkActivity"
+            android:exported="true" />
+        <activity
             android:name=".CheckoutActivity"
             android:exported="true" />
         <activity

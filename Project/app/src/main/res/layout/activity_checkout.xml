@@ -107,7 +107,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <!-- 支付方式 -->
+                <!-- 支付方式区域 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -129,9 +129,12 @@
                         android:layout_weight="1"
                         android:gravity="end"
                         android:text="支付宝"
+                        android:textColor="#666666"
                         android:textSize="14sp"
-                        android:textColor="#666666" />
+                        android:clickable="true"
+                        android:focusable="true" />
                 </LinearLayout>
+
 
                 <!-- 电话 -->
                 <LinearLayout
@@ -161,7 +164,7 @@
                         android:inputType="phone" />
                 </LinearLayout>
 
-                <!-- 备注 -->
+                <!-- 订单备注 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -184,7 +187,9 @@
                         android:gravity="end"
                         android:text="请在这里写下您的备注"
                         android:textSize="14sp"
-                        android:textColor="#999999" />
+                        android:textColor="#999999"
+                        android:clickable="true"
+                        android:focusable="true" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
