@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import com.example.smartstudent.adapter.StateAdapter;
 import com.example.smartstudent.model.User;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.gson.Gson;
 
@@ -50,6 +52,8 @@ import java.util.stream.Collectors;
 public class Activity_admin_AddItem extends AppCompatActivity {
     private LinearLayout statusContainer;
     private Button btnAddStatus;
+    private Button butConfirmAddItem;
+
     private Button butAddNewState;
 
     private List<String> allSlectOption = new ArrayList<>();
@@ -77,6 +81,14 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         btnAddStatus.setOnClickListener(v -> {
             addStatusView();
         });
+
+        // 点击“添加状态”按钮，弹出"可添加状态"窗口
+        butConfirmAddItem = findViewById(R.id.butConfirmAddItem);
+        butConfirmAddItem.setOnClickListener(v -> {
+            confirmAddItem();
+        });
+
+
     }
 
     //"可添加状态"窗口
@@ -241,6 +253,20 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         // 设置标题 获取编号
         tvTitle.setText(state);
 
+        //删除按钮
+        Button btnDelOpt = moduleView.findViewById(R.id.btnDelOpt);
+
+        // 给删除按钮设置点击监听，点击后删除该视图模块
+        btnDelOpt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 删除当前视图
+                statusContainer.removeView(moduleView);
+                //同时，更新可选状态
+                selectedStates.remove(state);
+            }
+        });
+
 
 
 
@@ -388,5 +414,123 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         builder.setView(dialogView);
         dialog.show();
     }
+
+    //确认添加商品
+    private void confirmAddItem(){
+        EditText name = findViewById(R.id.etName);
+        EditText price = findViewById(R.id.etPrice);
+        String image = "我是个图片";
+        EditText description = findViewById(R.id.etIntro);
+
+
+        // 添加商品
+        // 与servlet交流
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("http://10.0.2.2:8083/Servlet_war_exploded/milk-tea-item"); // 注意替换为实际地址
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
+
+                    // 构造 JSON 数据
+                    JSONObject json = new JSONObject();
+                    // 构造 JSON 数据
+                    json.put("name", name.getText().toString().trim()); //奶茶名
+                    json.put("price", Double.parseDouble(price.getText().toString().trim())); //价格
+                    json.put("image", image); //图片
+                    json.put("description", description.getText().toString().trim()); //介绍
+
+                    // 构建属性项
+                    // 遍历 statusContainer 中的所有子视图
+                    JSONArray attributes = new JSONArray(); // 最终结果
+
+                    for (int i = 0; i < statusContainer.getChildCount(); i++) {
+                        View childView = statusContainer.getChildAt(i);
+
+                        if (childView instanceof LinearLayout) {
+                            TextView attributeText = childView.findViewById(R.id.tvTitle);
+                            String attributeName = attributeText.getText().toString().trim();
+
+                            ChipGroup chipGroup = childView.findViewById(R.id.chipGroupOptions);
+                            JSONArray valueArray = new JSONArray();
+
+                            int chipCount = chipGroup.getChildCount();
+                            for (int chipNum = 0; chipNum < chipCount; chipNum++) {
+                                View chipView = chipGroup.getChildAt(chipNum);
+                                if (chipView instanceof Chip) {
+                                    Chip chip = (Chip) chipView;
+                                    String value = chip.getText().toString().trim();
+                                    valueArray.put(value);
+                                }
+                            }
+
+                            // 构建属性对象
+                            JSONObject attributeObject = new JSONObject();
+                            try {
+                                attributeObject.put("attribute", attributeName);
+                                attributeObject.put("attribute_value", valueArray);
+                                attributes.put(attributeObject); // 加入最终数组
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    // 放入主 JSON 中
+                    json.put("attributes", attributes);
+
+
+                    // 发送数据
+                    OutputStream os = conn.getOutputStream();
+                    os.write(json.toString().getBytes("UTF-8"));
+                    os.close();
+
+                    // 读取响应
+                    int code = conn.getResponseCode();
+                    if (code == 200) {
+                        InputStream is = conn.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                        final StringBuilder result = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);
+                        }
+                        reader.close();
+
+                        // 更新 UI
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String responseStr = result.toString();
+
+
+                                Log.d("responseStr",responseStr);
+                                Toast.makeText(getApplicationContext(), "添加成功: " + responseStr, Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        });
+                    } else {
+                        // 错误处理
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), "连接失败，错误码：" + code, Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "异常: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+        }).start();
+
+    }
+
+
+
 
 }

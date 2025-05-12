@@ -23,6 +23,14 @@
             android:layout_height="wrap_content"/>
 
         <Button
+            android:id="@+id/btnDelOpt"
+            android:background="@drawable/del"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginRight="10dp"
+            />
+
+        <Button
             android:id="@+id/btnAddOpt"
             android:background="@drawable/add"
             android:layout_width="30dp"

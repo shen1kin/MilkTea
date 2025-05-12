@@ -4,7 +4,9 @@ import com.example.util.DBUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MilkTeaAttributeValueDao {
 
@@ -35,10 +37,12 @@ public class MilkTeaAttributeValueDao {
     }
 
     // 添加属性值（根据属性名称）
-    public boolean addAttributeValueByAttributeName(String attributeName, List<String> values) {
+    public List<Integer> addAttributeValueByAttributeName(String attributeName, List<String> values) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
+
+        List<Integer> valueIds = new ArrayList<>();
 
         try {
             conn = DBUtil.getConnection();
@@ -53,28 +57,56 @@ public class MilkTeaAttributeValueDao {
             if (rs.next()) {
                 attributeId = rs.getInt("id");
             } else {
-                // 没查到该属性，无法添加
-                return false;
+                return valueIds; // 属性不存在
             }
 
-            // 第二步：插入属性值
-            // 插入属性值
-            String insertSql = "INSERT INTO MilkTeaAttributeValue (attribute_id, value, is_deleted) VALUES (?, ?, 0)";
-            stmt = conn.prepareStatement(insertSql);
+            // 第二步：查已有的属性值（value -> id 映射）
+            String selectExistingSql = "SELECT id, value FROM MilkTeaAttributeValue WHERE attribute_id = ? AND is_deleted = 0";
+            stmt = conn.prepareStatement(selectExistingSql);
+            stmt.setInt(1, attributeId);
+            rs = stmt.executeQuery();
 
+            Map<String, Integer> existingMap = new HashMap<>();
+            while (rs.next()) {
+                existingMap.put(rs.getString("value"), rs.getInt("id"));
+            }
+
+            // 筛选出需要插入的值
+            List<String> newValues = new ArrayList<>();
             for (String val : values) {
-                stmt.setInt(1, attributeId);
-                stmt.setString(2, val);
-                stmt.addBatch(); // 批量添加
+                if (existingMap.containsKey(val)) {
+                    valueIds.add(existingMap.get(val)); // 已有的直接加入返回列表
+                } else {
+                    newValues.add(val); // 新的待插入
+                }
             }
 
-            int[] results = stmt.executeBatch(); // 批量执行
-            return results.length == values.size();
+            // 第三步：插入新的属性值
+            if (!newValues.isEmpty()) {
+                String insertSql = "INSERT INTO MilkTeaAttributeValue (attribute_id, value, is_deleted) VALUES (?, ?, 0)";
+                stmt = conn.prepareStatement(insertSql, Statement.RETURN_GENERATED_KEYS);
+
+                for (String val : newValues) {
+                    stmt.setInt(1, attributeId);
+                    stmt.setString(2, val);
+                    stmt.addBatch();
+                }
+
+                stmt.executeBatch();
+
+                rs = stmt.getGeneratedKeys();
+                while (rs.next()) {
+                    valueIds.add(rs.getInt(1)); // 收集新插入的 ID
+                }
+            }
+
+            return valueIds;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
-
+            return valueIds;
         }
     }
+
+
 }

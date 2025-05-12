@@ -1,6 +1,7 @@
 package com.example.Servlet;
 
 import com.example.dao.MilkTeaAttributeDao;
+import com.example.dao.MilkTeaAttributeMapDao;
 import com.example.dao.MilkTeaAttributeValueDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,6 +23,7 @@ import java.util.List;
 public class MilkTeaAttributeAndValueServlet extends HttpServlet {
     private com.example.dao.MilkTeaAttributeValueDao MilkTeaAttributeValueDao = new MilkTeaAttributeValueDao();
     private com.example.dao.MilkTeaAttributeDao MilkTeaAttributeDao = new MilkTeaAttributeDao();
+    private MilkTeaAttributeMapDao MilkTeaAttributeMapDao = new MilkTeaAttributeMapDao();
 
     // 返回全部属性值
     @Override
@@ -77,27 +79,14 @@ public class MilkTeaAttributeAndValueServlet extends HttpServlet {
 
             // 添加属性
             // 添加查询是否存在
+            int addAttributeID = MilkTeaAttributeDao.addAttribute(attribute);
             boolean addAttributeState = true;
-            if (!MilkTeaAttributeDao.existsAttribute(attribute)) {
-                addAttributeState = MilkTeaAttributeDao.addAttribute(attribute);
-            }
-
-            //去重
-            List<String> already_attribute_valueList = MilkTeaAttributeValueDao.getAttributeValuesByAttributeName(attribute);
-
-            // 去除重复值
-            List<String> uniqueValuesToAdd = new ArrayList<>();
-            for (String val : attribute_value) {
-                if (!already_attribute_valueList.contains(val)) {
-                    uniqueValuesToAdd.add(val);
-                }
-            }
+            if(addAttributeID == -1) addAttributeState = false;
 
             // 添加属性值（只添加不重复的）
             boolean addAttributeValueState = true;
-            if (!uniqueValuesToAdd.isEmpty()) {
-                addAttributeValueState = MilkTeaAttributeValueDao.addAttributeValueByAttributeName(attribute, uniqueValuesToAdd);
-            }
+            List<Integer> addAttributeValueID = MilkTeaAttributeValueDao.addAttributeValueByAttributeName(attribute, attribute_value);
+            if(addAttributeValueID.isEmpty()) addAttributeValueState = false;
 
             if (addAttributeState && addAttributeValueState) {
                 // 查询成功

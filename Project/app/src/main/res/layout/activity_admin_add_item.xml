@@ -20,18 +20,49 @@
             android:layout_height="wrap_content"
             android:background="@drawable/textview_project_container"
             android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            android:gravity="left"
+            android:orientation="horizontal"
+            android:gravity="center"
             tools:ignore="RtlHardcoded">
 
             <TextView
                 style="@style/tvProjectTitle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:text="@string/project_name" />
 
             <EditText
                 android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入内容"
+                android:maxLines="5"
+                android:inputType="textMultiLine"
+                android:scrollbars="vertical"
+                />
+
+
+        </LinearLayout>
+
+        <!-- 商品价格 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textview_project_container"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            tools:ignore="RtlHardcoded">
+
+            <TextView
+                style="@style/tvProjectTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="商品价格" />
+
+            <EditText
+                android:id="@+id/etPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="请输入内容"
@@ -49,18 +80,20 @@
             android:layout_height="wrap_content"
             android:background="@drawable/textview_project_container"
             android:layout_marginBottom="10dp"
-            android:orientation="vertical">
+            >
 
             <TextView
                 style="@style/tvProjectTitle"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:gravity="left"
                 android:text="@string/project_img"
                 />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:src="@mipmap/ic_launcher"
                 />
 
@@ -78,6 +111,7 @@
                 style="@style/tvProjectTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:text="@string/project_introduce"
                 />
 
@@ -130,7 +164,7 @@
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@string/add_project" />
+            android:text="确认添加商品" />
 
 
         </LinearLayout>

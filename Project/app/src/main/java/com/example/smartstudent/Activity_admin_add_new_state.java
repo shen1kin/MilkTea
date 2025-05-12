@@ -113,7 +113,7 @@ public class Activity_admin_add_new_state extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
     //获取所有EditText的值，
-    public void getAllEditTextValues() {
+    private void getAllEditTextValues() {
         //清空
         editTextValues.clear();
         // 创建一个列表，用于存储所有 EditText 的值
