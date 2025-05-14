@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @WebServlet("/milk-tea-item")  // URL 以 / 开头
@@ -75,11 +76,13 @@ public class MilkTeaItem extends HttpServlet {
 
             String name = json.getString("name");
             double price = json.getDouble("price");
-            String image = json.getString("image");
+            // 获取 Base64 图片字符串并转为 byte[]
+            String imageBase64 = json.getString("image");
+            byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
             String description = json.getString("description");
 
             // 添加奶茶基础信息 返回 ID or -1
-            int addMilkTeaID = MilkTeaItemDao.addMilkTea(name,price,image,description);
+            int addMilkTeaID = MilkTeaItemDao.addMilkTea(name,price,imageBytes,description);
             //添加奶茶基础信息失败
             if (addMilkTeaID == -1)
             {

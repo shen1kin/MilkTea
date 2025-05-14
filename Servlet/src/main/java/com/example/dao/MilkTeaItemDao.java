@@ -9,7 +9,7 @@ import java.util.List;
 public class MilkTeaItemDao {
 
     //添加奶茶基础信息
-    public int addMilkTea(String name, double price, String image, String description) {
+    public int addMilkTea(String name, double price, byte[] image, String description) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -19,7 +19,7 @@ public class MilkTeaItemDao {
             stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             stmt.setString(1, name);
             stmt.setDouble(2, price);
-            stmt.setString(3, image);
+            stmt.setBytes(3, image);
             stmt.setString(4, description);
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
