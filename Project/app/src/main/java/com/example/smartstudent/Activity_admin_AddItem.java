@@ -3,6 +3,7 @@ package com.example.smartstudent;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,12 +37,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.Set;
 import java.util.HashSet;
@@ -50,6 +56,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Activity_admin_AddItem extends AppCompatActivity {
+    private static final int PICK_IMAGE_REQUEST = 1 ;
     private LinearLayout statusContainer;
     private Button btnAddStatus;
     private Button butConfirmAddItem;
@@ -61,6 +68,10 @@ public class Activity_admin_AddItem extends AppCompatActivity {
     private List<String> allStateOptions = new ArrayList<>();
 
     private Set<String> selectedStates = new HashSet<>(); // 用于记录已选择的状态
+
+    private ImageView imageView;
+
+    private Uri imageUri;
 
     public List<String> getAvailableStates() {
         return allStateOptions.stream()
@@ -78,15 +89,20 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         statusContainer = findViewById(R.id.statusContainer);
         btnAddStatus = findViewById(R.id.btnAddStatus);
         // 点击“添加状态”按钮，弹出"可添加状态"窗口
-        btnAddStatus.setOnClickListener(v -> {
-            addStatusView();
-        });
+        btnAddStatus.setOnClickListener(v -> {addStatusView();});
 
         // 点击“添加状态”按钮，弹出"可添加状态"窗口
         butConfirmAddItem = findViewById(R.id.butConfirmAddItem);
         butConfirmAddItem.setOnClickListener(v -> {
-            confirmAddItem();
+            try {
+                confirmAddItem();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
+        //图片
+        imageView = findViewById(R.id.imageView);
+        imageView.setOnClickListener(v -> {showImageDialog();});
 
 
     }
@@ -416,11 +432,40 @@ public class Activity_admin_AddItem extends AppCompatActivity {
     }
 
     //确认添加商品
-    private void confirmAddItem(){
+    private void confirmAddItem() throws IOException {
         EditText name = findViewById(R.id.etName);
         EditText price = findViewById(R.id.etPrice);
-        String image = "我是个图片";
         EditText description = findViewById(R.id.etIntro);
+        //处理图片转化为byte[]
+        byte[] image = getImageBytes(imageUri);
+        //将图片转换为 Base64 字符串
+        String imageBase64  = Base64.getEncoder().encodeToString(image);
+
+        // 获取输入的内容
+        String itemName = name.getText().toString().trim();
+        String itemPrice = price.getText().toString().trim();
+        String itemDescription = description.getText().toString().trim();
+
+        // 验证输入是否合法
+        if (itemName.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "奶茶名称不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (itemPrice.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "请输入有效的价格", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (itemDescription.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "描述不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (imageUri == null) {
+            Toast.makeText(getApplicationContext(), "请上传图片", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
 
         // 添加商品
@@ -441,7 +486,7 @@ public class Activity_admin_AddItem extends AppCompatActivity {
                     // 构造 JSON 数据
                     json.put("name", name.getText().toString().trim()); //奶茶名
                     json.put("price", Double.parseDouble(price.getText().toString().trim())); //价格
-                    json.put("image", image); //图片
+                    json.put("image", imageBase64); //图片
                     json.put("description", description.getText().toString().trim()); //介绍
 
                     // 构建属性项
@@ -466,6 +511,14 @@ public class Activity_admin_AddItem extends AppCompatActivity {
                                     String value = chip.getText().toString().trim();
                                     valueArray.put(value);
                                 }
+                            }
+
+
+                            // ➤ 判断属性值是否为空
+                            if (valueArray.length() == 0) {
+                                final String msg = "属性 \"" + attributeName + "\" 的属性值不能为空";
+                                runOnUiThread(() -> Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show());
+                                return; // 停止提交
                             }
 
                             // 构建属性对象
@@ -528,6 +581,86 @@ public class Activity_admin_AddItem extends AppCompatActivity {
             }
         }).start();
 
+    }
+    //显示管理图片窗口
+    private void showImageDialog() {
+
+
+        // 使用 BottomSheetDialog 也可以，下面示例使用 AlertDialog 结合自定义布局
+        //创建弹窗AlertDialog构建器
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //加载 实例化 弹窗布局
+
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.activity_admin_add_image_select, null);
+        dialog.setContentView(dialogView);
+
+        // 确保获取正确的父容器
+        ViewGroup parent = (ViewGroup) dialogView.getParent();
+
+        // 使用正确的Behavior获取方式
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(parent);
+
+        // 设置高度参数
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        behavior.setPeekHeight((int)(screenHeight * 0.5));
+        behavior.setMaxHeight((int)(screenHeight * 0.8)); // 设置最大高度
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        // 确保窗口参数生效
+        dialog.getWindow().setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+
+        //获取弹窗内组件
+        Button selectImg = dialogView.findViewById(R.id.btnSelectImg);
+        Button resetImg = dialogView.findViewById(R.id.btnResetImg);
+
+        //点击打开相册
+        selectImg.setOnClickListener(v -> openGallery());
+
+        //
+        resetImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageView.setImageDrawable(null);
+                imageUri = null;
+            }
+        });
+
+        builder.setView(dialogView);
+        dialog.show();
+    }
+    //打开相册
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+    //接收返回的图片数据
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            imageUri = data.getData();
+            imageView.setImageURI(imageUri);
+        }
+    }
+    //将图片处理成byte[]
+    private byte[] getImageBytes(Uri imageUri) throws IOException {
+        InputStream inputStream = getContentResolver().openInputStream(imageUri);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+
+        while ((length = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, length);
+        }
+        inputStream.close();
+
+        return byteArrayOutputStream.toByteArray();
     }
 
 

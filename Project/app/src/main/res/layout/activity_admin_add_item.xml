@@ -91,10 +91,16 @@
                 android:text="@string/project_img"
                 />
 
+            <!-- 显示图片 -->
             <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@mipmap/ic_launcher"
+                android:scaleType="centerCrop"
+                android:contentDescription="图片预览"
+                android:background="@drawable/add"
+                android:clickable="true"
+                android:focusable="true"
                 />
 
         </LinearLayout>
