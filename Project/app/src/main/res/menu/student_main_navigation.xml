@@ -15,7 +15,7 @@
     <item
         android:id="@+id/student_score_navigation"
         android:title="@string/student_main_navigation3"
-        android:icon="@drawable/score"
+        android:icon="@drawable/goods"
         />
 
     <item
