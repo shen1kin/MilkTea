@@ -41,6 +41,7 @@ public class Fragment_student_course extends Fragment {
     private List<Object> productList = new ArrayList<>();
 
     private boolean isScrollByClick = false;
+    private int currentOrderMode = OrderModeManager.getCurrentMode();
 
     @Nullable
     @Override
@@ -51,7 +52,7 @@ public class Fragment_student_course extends Fragment {
 
         ImageView cartIcon = view.findViewById(R.id.imgCartIcon);
         cartBadge = view.findViewById(R.id.tvCartBadge);
-        cartTotal = view.findViewById(R.id.tvCartTotalPrice); // 总价 TextView 初始化
+        cartTotal = view.findViewById(R.id.tvCartTotalPrice);
         etSearch = view.findViewById(R.id.etSearch);
         btnStorePickup = view.findViewById(R.id.btnStorePickup);
         btnDelivery = view.findViewById(R.id.btnDelivery);
@@ -67,11 +68,11 @@ public class Fragment_student_course extends Fragment {
             startActivity(intent);
         });
 
-        btnCheckout.setOnClickListener(v ->
-                startActivity(new Intent(getActivity(), CheckoutActivity.class))
-        );
+        btnCheckout.setOnClickListener(v -> {
+            OrderModeManager.setCurrentMode(currentOrderMode);
+            startActivity(new Intent(getActivity(), CheckoutActivity.class));
+        });
 
-        setButtonState(true);
         btnStorePickup.setOnClickListener(v -> setButtonState(true));
         btnDelivery.setOnClickListener(v -> setButtonState(false));
 
@@ -79,13 +80,24 @@ public class Fragment_student_course extends Fragment {
         initProductData();
         setupCategoryRecycler();
         setupProductRecycler();
+        updateCartBadge();
 
-        updateCartBadge(); // 页面初始化时更新角标和价格
+        // 初始状态
+        setButtonState(OrderModeManager.isPickup());
 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // 每次页面切换回来都刷新状态
+        setButtonState(OrderModeManager.isPickup());
+    }
+
     private void setButtonState(boolean isPickupSelected) {
+        currentOrderMode = isPickupSelected ? OrderModeManager.PICKUP : OrderModeManager.DELIVERY;
+
         if (isPickupSelected) {
             btnStorePickup.setTextSize(23);
             btnStorePickup.setTypeface(Typeface.DEFAULT_BOLD);
@@ -137,7 +149,7 @@ public class Fragment_student_course extends Fragment {
 
     private void setupProductRecycler() {
         productAdapter = new ProductAdapter(productList);
-        productAdapter.setOnAddToCartListener(() -> updateCartBadge());
+        productAdapter.setOnAddToCartListener(this::updateCartBadge);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerProducts.setLayoutManager(layoutManager);
@@ -162,7 +174,6 @@ public class Fragment_student_course extends Fragment {
         });
     }
 
-
     private void showCartDialog() {
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         View sheetView = LayoutInflater.from(getContext())
@@ -176,8 +187,8 @@ public class Fragment_student_course extends Fragment {
         CartAdapter adapter = new CartAdapter(items);
 
         adapter.setOnCartChangeListener(() -> {
-            updateCartBadge(); // 更新角标和主界面价格
-            tvTotal.setText("合计：" + CartManager.getTotalPrice()); // 更新弹窗总价
+            updateCartBadge();
+            tvTotal.setText("合计：" + CartManager.getTotalPrice());
         });
 
         cartRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -187,6 +198,7 @@ public class Fragment_student_course extends Fragment {
 
         btnCheckout.setOnClickListener(v -> {
             dialog.dismiss();
+            OrderModeManager.setCurrentMode(currentOrderMode);
             startActivity(new Intent(getActivity(), CheckoutActivity.class));
         });
 

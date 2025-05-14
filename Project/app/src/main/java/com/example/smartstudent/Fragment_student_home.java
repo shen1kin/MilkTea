@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,14 +84,19 @@ public class Fragment_student_home extends Fragment {
         Button btnStorePickup = view.findViewById(R.id.btnStorePickup);
         Button btnDelivery = view.findViewById(R.id.btnDelivery);
 
-        View.OnClickListener listener = v -> {
+        btnStorePickup.setOnClickListener(v -> {
+            OrderModeManager.setCurrentMode(OrderModeManager.PICKUP); // ✅ 设置为自取
             if (getActivity() instanceof Activity_student_main) {
                 ((Activity_student_main) getActivity()).switchToCourseFragment();
             }
-        };
+        });
 
-        btnStorePickup.setOnClickListener(listener);
-        btnDelivery.setOnClickListener(listener);
+        btnDelivery.setOnClickListener(v -> {
+            OrderModeManager.setCurrentMode(OrderModeManager.DELIVERY); // ✅ 设置为喜外送
+            if (getActivity() instanceof Activity_student_main) {
+                ((Activity_student_main) getActivity()).switchToCourseFragment();
+            }
+        });
     }
 
     private void setupImageShortcuts(View view) {
@@ -113,5 +120,12 @@ public class Fragment_student_home extends Fragment {
         if (sliderHandler != null) {
             sliderHandler.removeCallbacks(sliderRunnable);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // ✅ 可选：每次回到首页时默认重置为自取
+        OrderModeManager.setCurrentMode(OrderModeManager.PICKUP);
     }
 }

@@ -1,9 +1,6 @@
 package com.example.Servlet;
 
-import com.example.dao.MilkTeaAttributeDao;
-import com.example.dao.MilkTeaAttributeMapDao;
-import com.example.dao.MilkTeaAttributeValueDao;
-import com.example.dao.MilkTeaItemDao;
+import com.example.dao.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,6 +23,7 @@ public class MilkTeaItem extends HttpServlet {
     private MilkTeaAttributeDao MilkTeaAttributeDao = new MilkTeaAttributeDao();
     private MilkTeaItemDao MilkTeaItemDao = new MilkTeaItemDao();
     private MilkTeaAttributeMapDao MilkTeaAttributeMapDao = new MilkTeaAttributeMapDao();
+    private MilkTeaClassDao MilkTeaClassDao = new MilkTeaClassDao();
 
     // 查询单个奶茶属性（GET 请求）
     @Override
@@ -80,9 +78,24 @@ public class MilkTeaItem extends HttpServlet {
             String imageBase64 = json.getString("image");
             byte[] imageBytes = Base64.getDecoder().decode(imageBase64);
             String description = json.getString("description");
+            String classes = json.getString("class");
+
+
+            // 添加奶茶分类 返回 ID or -1
+            int classID = MilkTeaClassDao.addClass(classes);
+            //添加奶茶基础信息失败
+            if (classID == -1)
+            {
+                result.put("status", "fail");
+                result.put("message", "添加分类"+",商品名称为" + classes);
+                // 将响应写回给客户端
+                PrintWriter out = response.getWriter();
+                out.print(result.toString());  // 输出 JSON 字符串
+                out.flush();  // 刷新输出流
+            }
 
             // 添加奶茶基础信息 返回 ID or -1
-            int addMilkTeaID = MilkTeaItemDao.addMilkTea(name,price,imageBytes,description);
+            int addMilkTeaID = MilkTeaItemDao.addMilkTea(name,price,imageBytes,description,classID);
             //添加奶茶基础信息失败
             if (addMilkTeaID == -1)
             {
@@ -93,6 +106,8 @@ public class MilkTeaItem extends HttpServlet {
                 out.print(result.toString());  // 输出 JSON 字符串
                 out.flush();  // 刷新输出流
             }
+
+
 
             // 解析属性数组
             JSONArray attributes = json.getJSONArray("attributes");

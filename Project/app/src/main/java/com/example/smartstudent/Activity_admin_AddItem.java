@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smartstudent.adapter.ClassAdapter;
 import com.example.smartstudent.adapter.OptionAdapter;
 import com.example.smartstudent.adapter.StateAdapter;
 import com.example.smartstudent.model.User;
@@ -62,16 +63,23 @@ public class Activity_admin_AddItem extends AppCompatActivity {
     private Button butConfirmAddItem;
 
     private Button butAddNewState;
+    private Button butAddClass;
+
 
     private List<String> allSlectOption = new ArrayList<>();
+    private List<String> allClassOption = new ArrayList<>();
+    private List<String> allClassOptions = new ArrayList<>();
     //包含
     private List<String> allStateOptions = new ArrayList<>();
 
     private Set<String> selectedStates = new HashSet<>(); // 用于记录已选择的状态
+    private Set<String> selectedClass = new HashSet<>(); // 用于记录已选择的状态
 
     private ImageView imageView;
 
     private Uri imageUri;
+
+    TextView tvClass;
 
     public List<String> getAvailableStates() {
         return allStateOptions.stream()
@@ -103,6 +111,11 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         //图片
         imageView = findViewById(R.id.imageView);
         imageView.setOnClickListener(v -> {showImageDialog();});
+
+        // 添加分类按钮
+        butAddClass = findViewById(R.id.butAddClass);
+        butAddClass.setOnClickListener(v -> {addClassView();});
+        tvClass = findViewById(R.id.tvClass);
 
 
     }
@@ -435,6 +448,7 @@ public class Activity_admin_AddItem extends AppCompatActivity {
     private void confirmAddItem() throws IOException {
         EditText name = findViewById(R.id.etName);
         EditText price = findViewById(R.id.etPrice);
+        TextView classes = findViewById(R.id.tvClass);
         EditText description = findViewById(R.id.etIntro);
         //处理图片转化为byte[]
         byte[] image = getImageBytes(imageUri);
@@ -445,6 +459,7 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         String itemName = name.getText().toString().trim();
         String itemPrice = price.getText().toString().trim();
         String itemDescription = description.getText().toString().trim();
+        String itemClass = classes.getText().toString().trim();
 
         // 验证输入是否合法
         if (itemName.isEmpty()) {
@@ -467,6 +482,11 @@ public class Activity_admin_AddItem extends AppCompatActivity {
             return;
         }
 
+        if (itemClass.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "分类不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         // 添加商品
         // 与servlet交流
@@ -484,10 +504,11 @@ public class Activity_admin_AddItem extends AppCompatActivity {
                     // 构造 JSON 数据
                     JSONObject json = new JSONObject();
                     // 构造 JSON 数据
-                    json.put("name", name.getText().toString().trim()); //奶茶名
-                    json.put("price", Double.parseDouble(price.getText().toString().trim())); //价格
+                    json.put("name", itemName); //奶茶名
+                    json.put("price", Double.parseDouble(itemPrice)); //价格
                     json.put("image", imageBase64); //图片
-                    json.put("description", description.getText().toString().trim()); //介绍
+                    json.put("description", itemDescription); //介绍
+                    json.put("class", itemClass); //分类
 
                     // 构建属性项
                     // 遍历 statusContainer 中的所有子视图
@@ -663,7 +684,143 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         return byteArrayOutputStream.toByteArray();
     }
 
+    //"可添加状态"窗口
+    @SuppressLint("SetTextI18n")
+    public void addClassView() {
+        //后端获取属性信息
+        //与servlet交流
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("http://10.0.2.2:8083/Servlet_war_exploded/milk-tea-class"); // 注意替换为实际地址
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    conn.setDoInput(true);
 
+                    // 读取响应
+                    int code = conn.getResponseCode();
+                    if (code == 200) {
+                        InputStream is = conn.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                        final StringBuilder result = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);
+                        }
+                        reader.close();
+                        is.close();
+                        conn.disconnect();
+
+                        // 更新 UI
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String responseStr = result.toString();
+
+//                              Toast.makeText(getApplicationContext(), "登录结果: " + responseStr, Toast.LENGTH_LONG).show();
+                                Log.d("responseStr",responseStr);
+                                //成功登录
+                                try {
+                                    JSONObject responseJson = new JSONObject(responseStr);
+                                    JSONObject classJson = responseJson.getJSONObject("class");
+//                                  {"attribute":{"list":"[温度, 杯型, 甜度, 配料]"},"status":"success"}
+                                    // 取出 list
+                                    String listStr = classJson.getString("list");
+                                    // 转换成 JSONArray（需要先去掉引号）
+                                    JSONArray listArray = new JSONArray(listStr);
+                                    // 清空旧数据
+                                    allClassOptions.clear();
+                                    // 加入新数据
+                                    for (int i = 0; i < listArray.length(); i++) {
+                                        allClassOptions.add(listArray.getString(i));
+                                    }
+
+                                    //获取到数据，显示界面
+                                    showClassDialog();
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    } else {
+                        // 错误处理
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), "连接失败，错误码：" + code, Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "异常: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+        }).start();
+
+    }
+
+    //显示添加分类
+    private void showClassDialog() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View dialogView = getLayoutInflater().inflate(R.layout.activity_admin_add_class, null);
+        dialog.setContentView(dialogView);
+
+        // 确保获取正确的父容器
+        ViewGroup parent = (ViewGroup) dialogView.getParent();
+
+        // 使用正确的Behavior获取方式
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(parent);
+
+        // 设置高度参数
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        behavior.setPeekHeight((int)(screenHeight * 0.5));
+        behavior.setMaxHeight((int)(screenHeight * 0.8)); // 设置最大高度
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        // 确保窗口参数生效
+        dialog.getWindow().setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+
+
+        //创建弹窗AlertDialog构建器
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //获取弹窗内组件
+        RecyclerView rvOptions = dialogView.findViewById(R.id.rvClassOption);
+        //设置布局为垂直线性排列。
+        rvOptions.setLayoutManager(new LinearLayoutManager(this));
+        ClassAdapter adapter = new ClassAdapter(allClassOptions, new ClassAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String item) {
+                tvClass.setText(item);
+                dialog.dismiss(); // 关闭 BottomSheetDialog
+            }
+        });
+
+        rvOptions.setAdapter(adapter);
+        //设置对话框的内容视图为刚刚加载的 dialog_add_option.xml。
+        //创建并展示对话框。
+        builder.setView(dialogView);
+
+//        butAddNewState = dialogView.findViewById(R.id.butAddNewState);
+//        //按钮添加新属性
+//        butAddNewState.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(Activity_admin_AddItem.this, Activity_admin_add_new_state.class);
+//                startActivity(intent);
+//            }
+//        });
+
+
+
+        dialog.show();
+    }
 
 
 }

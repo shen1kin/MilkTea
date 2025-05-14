@@ -1,10 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutPaymentRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
+
+    <!-- 顶部标题栏 -->
+    <LinearLayout
+        android:id="@+id/layoutTitleBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="支付方式"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_close_black"
+            android:contentDescription="关闭"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
 
     <!-- 支付宝 -->
     <LinearLayout
@@ -15,13 +48,11 @@
         android:gravity="center_vertical"
         android:paddingVertical="12dp">
 
-        <!-- 左侧图标 -->
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/activity_main_background" />
+            android:src="@drawable/ic_alipay_logo" /> <!-- 替换为支付宝图标 -->
 
-        <!-- 中间文字 -->
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -29,14 +60,14 @@
             android:text="支付宝"
             android:textSize="16sp"
             android:paddingStart="12dp"
-            android:textColor="#000000"/>
+            android:textColor="#000000" />
 
-        <!-- 右侧选中图标 -->
+        <!-- 选中与否切换图标 -->
         <ImageView
             android:id="@+id/imgCheckAlipay"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/xuanzhong" />
+            android:src="@drawable/xuanzhong" /> <!-- 默认显示选中圆圈 -->
     </LinearLayout>
 
     <View
@@ -56,7 +87,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/activity_main_background" />
+            android:src="@drawable/ic_wechat_logo" /> <!-- 替换为微信图标 -->
 
         <TextView
             android:layout_width="0dp"
@@ -71,7 +102,6 @@
             android:id="@+id/imgCheckWechat"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/xuanzhong" />
+            android:src="@drawable/ic_radio_unchecked" /> <!-- 默认未选中图标 -->
     </LinearLayout>
-
 </LinearLayout>

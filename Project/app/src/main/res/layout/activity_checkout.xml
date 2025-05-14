@@ -1,15 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#E6E6E6">
 
-    <!-- 主体内容滚动区域 -->
+    <!-- 顶部标题栏 -->
+    <LinearLayout
+        android:id="@+id/layoutTopBar"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="返回"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="订单结算"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <!-- 内容滚动区 -->
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="72dp"
-        android:background="#E6E6E6">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingBottom="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/layoutTopBar"
+        app:layout_constraintBottom_toTopOf="@+id/layoutBottomBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -17,44 +58,108 @@
             android:orientation="vertical"
             android:padding="12dp">
 
-            <!-- 区块一：门店选择与预计时间 -->
+            <!-- 整体垂直容器 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <!-- 🚩配送方式按钮区（卡片外部贴顶） -->
+                <LinearLayout
+                    android:id="@+id/layoutDeliverySwitch"
+                    android:layout_width="362dp"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="-12dp"
+                    android:layout_marginTop="-6dp"
+                    android:translationY="-2dp"
+                    android:layout_gravity="start">
+
+                <!-- 门店自取 -->
+                <FrameLayout
+                    android:id="@+id/layoutPickup"
+                    android:layout_width="181dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imgPickupBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/zxj" />
+
+                    <TextView
+                        android:id="@+id/tvPickupLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="门店自取"
+                        android:textSize="14sp"
+                        android:textColor="#000000"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <!-- 喜外送 -->
+                <FrameLayout
+                    android:id="@+id/layoutDelivery"
+                    android:layout_width="181dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imgDeliveryBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ywxz" />
+
+                    <TextView
+                        android:id="@+id/tvDeliveryLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="喜外送"
+                        android:textSize="14sp"
+                        android:textColor="#888888"
+                        android:textStyle="bold" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- ✅ 卡片本体（门店信息） -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_card"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:layout_marginBottom="12dp">
+                android:layout_marginTop="0dp"
+                android:elevation="2dp">
 
-                <TextView
-                    android:id="@+id/tvDeliveryMode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="门店自取 | 喜外送"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#000000" />
-
+                <!-- 店名 -->
                 <TextView
                     android:id="@+id/tvStoreName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="广州花都商达街店"
+                    android:text="广州软件学院店 >"
+                    android:textStyle="bold"
                     android:textSize="14sp"
                     android:textColor="#333333"
                     android:layout_marginTop="6dp" />
 
+                <!-- 时间 -->
                 <TextView
                     android:id="@+id/tvPickupTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="预计 6 分钟后取茶"
+                    android:text="现在下单，预计 6 分钟后取茶"
                     android:textSize="12sp"
                     android:textColor="#999999"
                     android:layout_marginTop="4dp" />
             </LinearLayout>
+        </LinearLayout>
 
-            <!-- 区块二：商品列表 + 总计 -->
+
+        <!-- 区块二：商品列表 + 总计 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,13 +233,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:text="支付宝"
+                        android:text="支付宝 >"
                         android:textColor="#666666"
                         android:textSize="14sp"
                         android:clickable="true"
                         android:focusable="true" />
                 </LinearLayout>
-
 
                 <!-- 电话 -->
                 <LinearLayout
@@ -185,7 +289,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:text="请在这里写下您的备注"
+                        android:text="请在这里写下您的备注 >"
                         android:textSize="14sp"
                         android:textColor="#999999"
                         android:clickable="true"
@@ -198,15 +302,17 @@
     <!-- 底部支付栏 -->
     <LinearLayout
         android:id="@+id/layoutBottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
         android:paddingVertical="10dp"
         android:background="@android:color/white"
         android:elevation="4dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/tvPayAmount"
@@ -221,10 +327,10 @@
         <Button
             android:id="@+id/btnPay"
             android:layout_width="100dp"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:text="支付"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="#ffffff"
             android:backgroundTint="#000000" />
     </LinearLayout>
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
