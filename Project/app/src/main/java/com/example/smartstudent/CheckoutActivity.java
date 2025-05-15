@@ -15,18 +15,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartstudent.adapter.CheckoutAdapter;
 import com.example.smartstudent.cart.CartManager;
 import com.example.smartstudent.model.CartItem;
+import com.example.smartstudent.model.Order;
+import com.example.smartstudent.model.OrderModeManager;
+import com.example.smartstudent.model.OrderRepository;
+import com.example.smartstudent.model.ProductInfo;
+import com.example.smartstudent.utils.TimeUtil;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CheckoutActivity extends AppCompatActivity {
 
     private static final int REQUEST_REMARK = 1001;
 
-    // 配送方式相关控件
     private ImageView imgPickupBg, imgDeliveryBg;
     private TextView tvPickupLabel, tvDeliveryLabel;
-
     private TextView tvStoreName, tvPickupTime;
     private TextView tvTotalCount, tvTotalPrice, tvPayAmount;
     private TextView tvPaymentMethod, tvRemark;
@@ -41,7 +47,6 @@ public class CheckoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
 
-        // === 1. 初始化顶部配送方式图文按钮 ===
         imgPickupBg = findViewById(R.id.imgPickupBg);
         imgDeliveryBg = findViewById(R.id.imgDeliveryBg);
         tvPickupLabel = findViewById(R.id.tvPickupLabel);
@@ -51,31 +56,25 @@ public class CheckoutActivity extends AppCompatActivity {
         FrameLayout layoutDelivery = findViewById(R.id.layoutDelivery);
 
         layoutPickup.setOnClickListener(v -> {
+            OrderModeManager.setMode(OrderModeManager.PICKUP);
             switchToPickup();
-            OrderModeManager.setCurrentMode(OrderModeManager.PICKUP);
         });
-
         layoutDelivery.setOnClickListener(v -> {
+            OrderModeManager.setMode(OrderModeManager.DELIVERY);
             switchToDelivery();
-            OrderModeManager.setCurrentMode(OrderModeManager.DELIVERY);
         });
 
-        // === 2. 门店信息显示 ===
         tvStoreName = findViewById(R.id.tvStoreName);
         tvPickupTime = findViewById(R.id.tvPickupTime);
-
-        // ✅ 根据 OrderModeManager 设置初始取餐方式
         if (OrderModeManager.isPickup()) {
             switchToPickup();
         } else {
             switchToDelivery();
         }
 
-        // === 3. 返回按钮 ===
         btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
 
-        // === 4. 商品列表 ===
         recyclerView = findViewById(R.id.recyclerCheckout);
         tvTotalCount = findViewById(R.id.tvTotalCount);
         tvTotalPrice = findViewById(R.id.tvTotalPrice);
@@ -91,22 +90,38 @@ public class CheckoutActivity extends AppCompatActivity {
         tvTotalPrice.setText("，小计 " + totalPrice);
         tvPayAmount.setText("待支付 " + totalPrice);
 
-        // === 5. 支付方式弹窗 ===
         tvPaymentMethod = findViewById(R.id.tvPaymentMethod);
         tvPaymentMethod.setOnClickListener(v -> showPaymentBottomSheet());
 
-        // === 6. 备注跳转 ===
         tvRemark = findViewById(R.id.tvRemark);
         tvRemark.setOnClickListener(v -> {
             Intent intent = new Intent(this, RemarkActivity.class);
             startActivityForResult(intent, REQUEST_REMARK);
         });
 
-        // === 7. 支付按钮 ===
         btnPay = findViewById(R.id.btnPay);
+        // ✅ CheckoutActivity.java 中修改构造订单部分
         btnPay.setOnClickListener(v -> {
             Toast.makeText(this, "模拟支付成功", Toast.LENGTH_SHORT).show();
+
+            // 构造订单数据（真实商品信息）
+            String storeName = isDeliveryMode ? "广州软件学院宿舍 >" : "广州软件学院店 >";
+            String status = isDeliveryMode ? "配送中" : "制作中";
+            String time = TimeUtil.getCurrentTime();
+            String price = CartManager.getTotalPrice();
+            int count = CartManager.getTotalCount();
+            List<ProductInfo> productInfos = CartManager.getProductInfoListWithCount();
+
+            Order order = new Order(storeName, time, status, price, count, productInfos);
+            OrderRepository.addOrder(order);
+
+            Intent intent = new Intent(this, OrderDetailActivity.class);
+            intent.putExtra("order", order);
+            startActivity(intent);
+            finish();
         });
+
+
     }
 
     private void switchToPickup() {
@@ -131,21 +146,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
         tvStoreName.setText("广州软件学院宿舍 >");
         tvPickupTime.setText("现在下单，预计 28 分钟后送达");
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_REMARK && resultCode == RESULT_OK && data != null) {
-            String remark = data.getStringExtra("remark");
-            if (remark != null && !remark.isEmpty()) {
-                tvRemark.setText(remark);
-                tvRemark.setTextColor(getResources().getColor(android.R.color.black));
-            } else {
-                tvRemark.setText("请在这里写下您的备注 >");
-                tvRemark.setTextColor(getResources().getColor(android.R.color.darker_gray));
-            }
-        }
     }
 
     private void showPaymentBottomSheet() {
@@ -173,8 +173,27 @@ public class CheckoutActivity extends AppCompatActivity {
         });
 
         btnClose.setOnClickListener(v -> bottomSheetDialog.dismiss());
-
         bottomSheetDialog.setContentView(dialogView);
         bottomSheetDialog.show();
+    }
+
+    private String getCurrentTimeString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        return sdf.format(new Date());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_REMARK && resultCode == RESULT_OK && data != null) {
+            String remark = data.getStringExtra("remark");
+            if (remark != null && !remark.isEmpty()) {
+                tvRemark.setText(remark);
+                tvRemark.setTextColor(getResources().getColor(android.R.color.black));
+            } else {
+                tvRemark.setText("请在这里写下您的备注 >");
+                tvRemark.setTextColor(getResources().getColor(android.R.color.darker_gray));
+            }
+        }
     }
 }

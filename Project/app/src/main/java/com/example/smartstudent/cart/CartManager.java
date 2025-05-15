@@ -1,11 +1,14 @@
 package com.example.smartstudent.cart;
 
+import static android.os.Build.VERSION_CODES.P;
+
 import com.example.smartstudent.model.CartItem;
 import com.example.smartstudent.model.ProductInfo;
 
 import java.util.*;
 
 public class CartManager {
+    private static List<CartItem> cartItems = new ArrayList<>();
 
     private static final Map<ProductInfo, Integer> cartMap = new LinkedHashMap<>();
 
@@ -59,6 +62,32 @@ public class CartManager {
         }
         return list;
     }
+
+    public static List<ProductInfo> getProductInfoListWithCount() {
+        List<ProductInfo> list = new ArrayList<>();
+        for (CartItem item : cartItems) {
+            ProductInfo p = item.getProduct();
+            if (p != null) {
+                ProductInfo copy = new ProductInfo();
+                copy.id = p.id;
+                copy.setName(p.getName());
+                copy.setPrice(p.getPrice());
+                copy.setCategory(p.getCategory());
+                copy.description = p.description;
+                copy.clazz = p.clazz;
+                copy.image = p.image;
+                copy.attributes = p.attributes;
+                copy.setCount(item.getCount());
+                list.add(copy);
+            }
+        }
+        return list;
+    }
+
+
+
+
+
 
     public static Map<ProductInfo, Integer> getMap() {
         return cartMap;

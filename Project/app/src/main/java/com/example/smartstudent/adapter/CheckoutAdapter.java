@@ -33,9 +33,9 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
     public void onBindViewHolder(@NonNull CheckoutViewHolder holder, int position) {
         CartItem item = items.get(position);
 
-        holder.tvName.setText(item.product.getName());
-        holder.tvPrice.setText(item.product.getPrice());
-        holder.tvCount.setText("×" + item.count);
+        holder.tvName.setText(item.getProduct().getName());
+        holder.tvPrice.setText(item.getProduct().getPrice());
+        holder.tvCount.setText("×" + item.getCount());
 
         // 如果 ProductInfo 中有规格描述字段可以设置规格
         holder.tvSpec.setText("冷/黑杯/少冰/芝士云顶"); // ✅ 可替换为 item.product.getSpec()

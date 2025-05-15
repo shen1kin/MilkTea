@@ -14,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.smartstudent.model.OrderModeManager;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

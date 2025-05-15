@@ -64,9 +64,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         CartItem item = items.get(position);
 
-        holder.tvName.setText(item.product.getName());
-        holder.tvPrice.setText(item.product.getPrice());
-        holder.tvCount.setText(String.valueOf(item.count));
+        holder.tvName.setText(item.getProduct().getName());
+        holder.tvPrice.setText(item.getProduct().getPrice());
+        holder.tvCount.setText(String.valueOf(item.getCount()));
 
         // 设置规格字段，如无可使用默认描述
         holder.tvSpec.setText("默认规格");
@@ -75,19 +75,19 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.itemImage.setImageResource(R.drawable.ic_launcher_background);
 
         holder.btnAdd.setOnClickListener(v -> {
-            CartManager.add(item.product);
+            CartManager.add(item.getProduct());
             refresh();
             if (cartChangeListener != null) cartChangeListener.onCartChanged();
         });
 
         holder.btnMinus.setOnClickListener(v -> {
-            CartManager.decrease(item.product);
+            CartManager.decrease(item.getProduct());
             refresh();
             if (cartChangeListener != null) cartChangeListener.onCartChanged();
         });
 
         holder.btnDelete.setOnClickListener(v -> {
-            CartManager.remove(item.product);
+            CartManager.remove(item.getProduct());
             refresh();
             Toast.makeText(v.getContext(), "已删除商品", Toast.LENGTH_SHORT).show();
             if (cartChangeListener != null) cartChangeListener.onCartChanged();

@@ -10,6 +10,7 @@ public class ProductInfo {
     private String name;
     private String price;
     private String category;
+    public int count;
 
 
     public String description;
@@ -23,6 +24,10 @@ public class ProductInfo {
     public int getId() {
         return id;
     }
+
+    public int getCount() { return count; }
+
+    public void setCount(int count) { this.count = count; }
 
     public void setId(int id) {
         this.id = id;

@@ -46,9 +46,6 @@
             android:name=".OrderDetailActivity"
             android:exported="true"/>
         <activity
-            android:name=".Activity_checkout"
-            android:exported="true" />
-        <activity
             android:name=".SearchActivity"
             android:exported="true" />
         <activity
