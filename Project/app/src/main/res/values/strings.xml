@@ -19,7 +19,7 @@
     <!--    activity_student_main-->
     <string name="student_main_navigation1">首页</string>
     <string name="student_main_navigation2">点单</string>
-    <string name="student_main_navigation3">社区</string>
+    <string name="student_main_navigation3">订单</string>
     <string name="student_main_navigation4">我的</string>
 
 
