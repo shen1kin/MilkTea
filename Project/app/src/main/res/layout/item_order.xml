@@ -1,53 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:padding="12dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:padding="12dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="10dp"
     android:elevation="1dp">
 
-    <TextView
-        android:id="@+id/tvStore"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="广州软件学院店"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:textColor="#000000" />
-
-    <TextView
-        android:id="@+id/tvProduct"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="鲜果茶 x1"
-        android:textSize="14sp"
-        android:textColor="#444444"
-        android:layout_marginTop="4dp" />
-
+    <!-- 顶部门店 + 状态 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="space_between"
-        android:layout_marginTop="6dp">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvStore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="广州软件学院店"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tvOrderTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2025-05-14 15:30"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="制作中"
-            android:textSize="13sp"
-            android:textColor="#FF9800" />
+            android:text="配送中"
+            android:textSize="14sp"
+            android:textColor="#FF9800"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvPrice"
+    <!-- 中部灰框状态提示（可根据状态决定是否显示） -->
+    <LinearLayout
+        android:id="@+id/layoutOrderStatusHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F0F0F0"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvStatusHintTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="订单配送中"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#444444" />
+
+            <TextView
+                android:id="@+id/tvStatusHintSub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="预计 28 分钟后送达，请耐心等待"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnContactService"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="¥28.00"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:textColor="#000000" />
+            android:text="联系客服"
+            android:textSize="12sp"
+            android:background="@drawable/bg_border_gray"
+            android:textColor="#666666"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp" />
     </LinearLayout>
+
+    <!-- 商品图片展示区 -->
+    <LinearLayout
+        android:id="@+id/layoutProductImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:gravity="start">
+
+        <!-- 动态添加商品图片 -->
+    </LinearLayout>
+
+    <!-- 总价与件数 -->
+    <TextView
+        android:id="@+id/tvOrderTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="总价 ¥73.00"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:id="@+id/tvOrderCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="共 6 件商品"
+        android:textSize="12sp"
+        android:textColor="#999999"
+        android:layout_marginTop="2dp" />
 </LinearLayout>
