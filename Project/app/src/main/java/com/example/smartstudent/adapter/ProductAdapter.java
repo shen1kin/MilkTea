@@ -62,11 +62,24 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof TitleViewHolder) {
             ((TitleViewHolder) holder).title.setText((String) itemList.get(position));
         } else if (holder instanceof ProductViewHolder) {
+
+            //{
+            //  "经典奶茶": [
+            //    ProductInfo{id=1, name="原味奶茶", price="¥12", description="香浓经典", ...},
+            //    ProductInfo{id=2, name="珍珠奶茶", price="¥14", description="加了珍珠", ...}
+            //  ],
+            //  "水果茶": [
+            //    ProductInfo{id=3, name="百香果茶", price="¥13", description="酸甜可口", ...}
+            //  ],
+            //  ...
+            //}
             ProductInfo product = (ProductInfo) itemList.get(position);
             ProductViewHolder h = (ProductViewHolder) holder;
 
             h.name.setText(product.getName());
             h.price.setText(product.getPrice());
+            h.description.setText(product.getDescription());
+            h.image.setImageBitmap(product.getImage());
             // 如果有图片字段可以设置 h.image.setImageResource 或 setImageURI
 
             h.btnAddToCart.setOnClickListener(v -> {
@@ -96,7 +109,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView name, price;
+        TextView name, price,description;
         Button btnAddToCart;
         ImageView image;
 
@@ -104,6 +117,7 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
             name = itemView.findViewById(R.id.tvName);
             price = itemView.findViewById(R.id.tvPrice);
+            description = itemView.findViewById(R.id.tvDescription);
             image = itemView.findViewById(R.id.itemImage);
             btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
         }

@@ -5,20 +5,22 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="10dp"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+
+    >
 
     <!-- 商品图片 -->
     <ImageView
         android:id="@+id/itemImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:layout_marginEnd="10dp"
         android:src="@mipmap/ic_launcher"
         android:scaleType="centerCrop"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -29,25 +31,57 @@
             android:layout_height="wrap_content"
             android:text="商品名称"
             android:textColor="@color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp" />
+
+        <!-- 商品介绍 -->
+        <TextView
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="商品介绍很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长"
+            android:textColor="@color/gray_thin"
+            android:textSize="12sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginBottom="5dp" />
 
         <!-- 商品价格 -->
-        <TextView
-            android:id="@+id/tvPrice"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="￥0.00"
-            android:textColor="@color/black"
-            android:textSize="14sp"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvPriceIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="￥"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.00"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <Button
         android:id="@+id/btnAddToCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
         android:text="加入购物车"
         android:textSize="12sp"
         android:backgroundTint="@color/black"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:layout_marginLeft="10dp"
+        />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootCourseLayout"
     android:background="#524C4C"
     android:layout_width="match_parent"
@@ -120,6 +121,28 @@
             android:text="inspiration natural zen"
             android:textSize="13sp"
             android:textColor="#888888" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layoutProgressBar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/layoutStoreInfo"
+        app:layout_constraintBottom_toTopOf="@+id/layoutCartBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/white"
+        >
+
+        <!-- 圈圈加载动画 -->
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+        />
     </LinearLayout>
 
     <!-- 主体布局：左菜单 + 右商品 -->

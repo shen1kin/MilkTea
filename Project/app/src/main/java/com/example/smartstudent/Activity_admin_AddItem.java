@@ -808,7 +808,7 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         builder.setView(dialogView);
 
 //        butAddNewState = dialogView.findViewById(R.id.butAddNewState);
-//        //按钮添加新属性
+//        TODO:按钮添加新属性
 //        butAddNewState.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {

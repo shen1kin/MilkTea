@@ -1,6 +1,8 @@
 package com.example.Servlet;
 
 import com.example.dao.*;
+import com.example.model.MilkTea;
+import com.example.model.MilkTeaAttribute;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,21 +31,83 @@ public class MilkTeaItem extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // 设置响应类型为 JSON，编码为 UTF-8
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
+        // 从数据库获取所有奶茶信息
+        List<MilkTea> milkTeaList = MilkTeaItemDao.getMilkTeaList();  // 假设返回的是一个包含所有奶茶信息的列表
+
+        // 创建一个 JSON 对象来存放响应数据
         JSONObject result = new JSONObject();
+
         try {
-            result.put("status", "fail");
-            result.put("message", "请使用 POST 方法提交属性名");
+            if (milkTeaList != null && !milkTeaList.isEmpty()) {
+                // 查询成功
+                result.put("status", "success");
+
+                // 创建一个 JSON 数组来存放所有奶茶信息
+                JSONArray milkTeaJsonArray = new JSONArray();
+                for (MilkTea milkTea : milkTeaList) {
+                    JSONObject milkTeaJson = new JSONObject();
+                    milkTeaJson.put("id", milkTea.getId());
+                    milkTeaJson.put("name", milkTea.getName());
+                    milkTeaJson.put("price", milkTea.getPrice());
+                    // 获取图片的二进制数据并转为 Base64
+                    String base64Image = Base64.getEncoder().encodeToString(milkTea.getImage()); // 将二进制数据转换为 Base64 字符串
+                    milkTeaJson.put("image", base64Image);
+                    milkTeaJson.put("description", milkTea.getDescription());
+                    milkTeaJson.put("class", milkTea.getClazz());
+
+                    // 将奶茶的属性也加入 JSON
+                    JSONArray attributesJsonArray = new JSONArray();
+                    for (MilkTeaAttribute attribute : milkTea.getAttributes()) {
+                        JSONObject attributeJson = new JSONObject();
+                        attributeJson.put("attribute", attribute.getAttribute());
+                        attributeJson.put("attribute_value", new JSONArray(attribute.getAttribute_value()));
+                        attributesJsonArray.put(attributeJson);
+                    }
+                    milkTeaJson.put("attributes", attributesJsonArray);
+
+                    // 将奶茶的 JSON 对象加入数组
+                    milkTeaJsonArray.put(milkTeaJson);
+                }
+
+                // 将奶茶信息放入响应数据
+                result.put("milkTeas", milkTeaJsonArray);
+            } else {
+                // 查询失败，返回状态信息
+                result.put("status", "fail");
+                result.put("message", "未查询到奶茶信息");
+            }
+
         } catch (JSONException e) {
-            e.printStackTrace();
+            // 捕获 JSON 格式错误
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            try {
+                result.put("status", "fail");
+                result.put("message", "无效的 JSON 数据");
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();  // 打印异常
+            }
+        } catch (Exception e) {
+            // 捕获其他未知异常
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            try {
+                result.put("status", "error");
+                result.put("message", "服务器内部错误");
+            } catch (JSONException jsonException) {
+                jsonException.printStackTrace();  // 打印异常
+            }
         }
 
+        // 输出响应数据
         PrintWriter out = response.getWriter();
         out.print(result.toString());
         out.flush();
     }
+
 
     // 查询单个奶茶属性（POST 请求）
     @Override
