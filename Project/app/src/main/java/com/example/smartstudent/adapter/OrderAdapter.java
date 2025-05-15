@@ -78,10 +78,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 img.setLayoutParams(lp);
                 img.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-                if (order.productList.get(i).getImage() != null) {
-                    img.setImageBitmap(order.productList.get(i).getImage());
-                    holder.layoutProductImages.addView(img);
-                }
+//                if (order.productList.get(i).getImage() != null) {
+//                    img.setImageBitmap(order.productList.get(i).getImage());
+//                    holder.layoutProductImages.addView(img);
+//                }
             }
         }
 

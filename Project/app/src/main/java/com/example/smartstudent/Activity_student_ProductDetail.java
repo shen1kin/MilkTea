@@ -66,6 +66,13 @@ public class Activity_student_ProductDetail extends AppCompatActivity {
                 ivImage.setImageBitmap(bitmap);
             }
 
+//            public Bitmap loadImageFromPath(String imagePath) {
+//                if (imagePath == null || !new File(imagePath).exists()) {
+//                    return null;
+//                }
+//                return BitmapFactory.decodeFile(imagePath);
+//            }
+
             LinearLayout parentLayout = findViewById(R.id.layoutAttributeContainer);
             List<MilkTeaAttribute> attributeList = product.getAttributes();
 

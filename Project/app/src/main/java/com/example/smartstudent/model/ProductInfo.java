@@ -16,7 +16,7 @@ public class ProductInfo implements Serializable {
 
     public String description;
     public String clazz;
-    public String image; // 用于展示的图片
+    public String image; // 本地缓存绝对路径
 
     public List<MilkTeaAttribute> attributes;
 

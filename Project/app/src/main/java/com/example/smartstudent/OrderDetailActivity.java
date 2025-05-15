@@ -115,7 +115,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             TextView count = itemView.findViewById(R.id.tvCount);
 
             // 填充数据
-            img.setImageBitmap(product.getImage());
+//            img.setImageBitmap(product.getImage());
             name.setText(product.getName());
             spec.setText(getSpecText(product));
             price.setText(product.getPrice());
