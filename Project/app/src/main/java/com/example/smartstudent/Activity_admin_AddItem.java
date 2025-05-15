@@ -155,7 +155,7 @@ public class Activity_admin_AddItem extends AppCompatActivity {
                             public void run() {
                                 String responseStr = result.toString();
 
-//                              Toast.makeText(getApplicationContext(), "登录结果: " + responseStr, Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getApplicationContext(), "登录结果: " + responseStr, Toast.LENGTH_LONG).show();
                                 Log.d("responseStr",responseStr);
                                 //成功登录
                                 try {

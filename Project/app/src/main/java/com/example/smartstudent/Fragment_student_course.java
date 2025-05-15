@@ -33,19 +33,29 @@ import com.example.smartstudent.model.MilkTeaAttribute;
 import com.example.smartstudent.model.OrderModeManager;
 import com.example.smartstudent.model.ProductInfo;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.commons.io.output.ByteArrayOutputStream;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Fragment_student_course extends Fragment {
@@ -161,7 +171,7 @@ public class Fragment_student_course extends Fragment {
         recyclerCategory.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerCategory.setAdapter(categoryAdapter);
     }
-
+    //更新分类高亮
     private void setupProductRecycler() {
         productAdapter = new ProductAdapter(productList);
         productAdapter.setOnAddToCartListener(this::updateCartBadge);
@@ -247,7 +257,7 @@ public class Fragment_student_course extends Fragment {
             }
         }
     }
-
+    //获取数据信息
     private void getMilkTeaInfo() {
         // 启动子线程进行网络请求
         new Thread(() -> {
@@ -296,18 +306,30 @@ public class Fragment_student_course extends Fragment {
                                     product.description = teaObj.getString("description");
                                     product.clazz = teaObj.getString("class");
 
-                                    // Base64 去掉前缀（如果有）
+                                    // Base64 解码部分
                                     String base64 = teaObj.getString("image");
-                                    if (base64.contains(",")) {
-                                        base64 = base64.split(",")[1];
+                                    if (base64 != null && base64.contains(",")) {
+                                        base64 = base64.split(",")[1]; // 移除 Data URL 前缀
                                     }
 
-                                    // 转成 Bitmap
-                                    byte[] decodedBytes = Base64.decode(base64, Base64.DEFAULT);
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                                    Bitmap bitmap = null;
+                                    try {
+                                        byte[] decodedBytes = Base64.decode(base64, Base64.DEFAULT);
+                                        bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+                                    } catch (Exception e) {
+                                        Log.e("ImageDecode", "Base64 decode error", e);
+                                    }
 
-                                    // 设置到 ProductInfo 对象中
-                                    product.image = bitmap; // 添加 Bitmap 字段
+// 必须检查是否为 null 再保存
+                                    if (bitmap != null) {
+                                        String imagePath = saveImage(bitmap);
+                                        if (imagePath != null) {
+                                            product.image = imagePath;
+                                        }
+                                        bitmap.recycle(); // 及时释放内存
+                                    } else {
+                                        Log.e("ImageSave", "Failed to decode Base64 image");
+                                    }
 
                                     // 解析属性列表
                                     JSONArray attrArray = teaObj.getJSONArray("attributes");
@@ -378,21 +400,10 @@ public class Fragment_student_course extends Fragment {
             }
         }).start();
     }
-
+    //初始化 将获取信息 填入组件
     private void initAllDate(Map<String, List<ProductInfo>> categoryToProductsMap) {
         categoryList.clear();
         productList.clear();
-
-        //{
-        //  "经典奶茶": [
-        //    ProductInfo{id=1, name="原味奶茶", price="¥12", description="香浓经典", ...},
-        //    ProductInfo{id=2, name="珍珠奶茶", price="¥14", description="加了珍珠", ...}
-        //  ],
-        //  "水果茶": [
-        //    ProductInfo{id=3, name="百香果茶", price="¥13", description="酸甜可口", ...}
-        //  ],
-        //  ...
-        //}
 
         int index = 0;
         for (Map.Entry<String, List<ProductInfo>> entry : categoryToProductsMap.entrySet()) {
@@ -410,24 +421,34 @@ public class Fragment_student_course extends Fragment {
         }
     }
 
-//    private void initCategoryData() {
-//        categoryList.clear();
-//        String[] names = {"时令上新", "超级植物茶", "鲜果茶", "原叶茗茶", "浓郁牛乳茶", "灵感茶点小料"};
-//        for (int i = 0; i < names.length; i++) {
-//            categoryList.add(new Category(names[i], i == 0));
-//        }
-//    }
-//
-//    private void initProductData() {
-//        productList.clear();
-//        String[] categories = {"时令上新", "超级植物茶", "鲜果茶", "原叶茗茶", "浓郁牛乳茶", "灵感茶点小料"};
-//        for (String category : categories) {
-//            productList.add(category);
-//            for (int i = 1; i <= 5; i++) {
-//                productList.add(new ProductInfo(category + " 商品 " + i, "¥" + (10 + i), category));
-//            }
-//        }
-//    }
+    //将图片缓存到本地，返回值为文件的绝对路径
+    public String saveImage(Bitmap bitmap) {
+        // 1. 检查Context可用性
+        if (getContext() == null) return null;
+
+        // 2. 获取应用专属缓存目录（无需权限）
+        File cacheDir = getContext().getExternalCacheDir();
+        if (cacheDir == null) {
+            cacheDir = getContext().getCacheDir();
+        }
+
+        // 3. 清理旧文件（可选）
+        for (File file : cacheDir.listFiles()) {
+            file.delete();
+        }
+
+        // 4. 保存新文件
+        String filename = "IMG_" + System.currentTimeMillis() + ".png";
+        File newFile = new File(cacheDir, filename);
+
+        try (FileOutputStream out = new FileOutputStream(newFile)) {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            return newFile.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
 }

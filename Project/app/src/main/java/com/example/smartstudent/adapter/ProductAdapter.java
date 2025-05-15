@@ -1,5 +1,9 @@
 package com.example.smartstudent.adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smartstudent.Activity_student_ProductDetail;
 import com.example.smartstudent.R;
 import com.example.smartstudent.cart.CartManager;
 import com.example.smartstudent.model.ProductInfo;
@@ -59,6 +64,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+
         if (holder instanceof TitleViewHolder) {
             ((TitleViewHolder) holder).title.setText((String) itemList.get(position));
         } else if (holder instanceof ProductViewHolder) {
@@ -79,20 +86,57 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             h.name.setText(product.getName());
             h.price.setText(product.getPrice());
             h.description.setText(product.getDescription());
-            h.image.setImageBitmap(product.getImage());
-            // 如果有图片字段可以设置 h.image.setImageResource 或 setImageURI
 
+            String imagePath = product.getImage();
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            h.image.setImageBitmap(bitmap);
+
+            //点击之后页面跳转到详细界面
             h.btnAddToCart.setOnClickListener(v -> {
-                CartManager.add(product);
-                Toast.makeText(v.getContext(), "已加入购物车", Toast.LENGTH_SHORT).show();
-
-                // ✅ 通知外部刷新角标和总价
-                if (addToCartListener != null) {
-                    addToCartListener.onAdd();
-                }
+                Context context = holder.itemView.getContext();
+                Intent intent = new Intent(context, Activity_student_ProductDetail.class);
+                intent.putExtra("product", product);
+                context.startActivity(intent);
             });
         }
     }
+
+//    @Override
+//    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+//        if (holder instanceof TitleViewHolder) {
+//            ((TitleViewHolder) holder).title.setText((String) itemList.get(position));
+//        } else if (holder instanceof ProductViewHolder) {
+//
+//            //{
+//            //  "经典奶茶": [
+//            //    ProductInfo{id=1, name="原味奶茶", price="¥12", description="香浓经典", ...},
+//            //    ProductInfo{id=2, name="珍珠奶茶", price="¥14", description="加了珍珠", ...}
+//            //  ],
+//            //  "水果茶": [
+//            //    ProductInfo{id=3, name="百香果茶", price="¥13", description="酸甜可口", ...}
+//            //  ],
+//            //  ...
+//            //}
+//            ProductInfo product = (ProductInfo) itemList.get(position);
+//            ProductViewHolder h = (ProductViewHolder) holder;
+//
+//            h.name.setText(product.getName());
+//            h.price.setText(product.getPrice());
+//            h.description.setText(product.getDescription());
+//            h.image.setImageBitmap(product.getImage());
+//            // 如果有图片字段可以设置 h.image.setImageResource 或 setImageURI
+//
+//            h.btnAddToCart.setOnClickListener(v -> {
+//                CartManager.add(product);
+//                Toast.makeText(v.getContext(), "已加入购物车", Toast.LENGTH_SHORT).show();
+//
+//                // ✅ 通知外部刷新角标和总价
+//                if (addToCartListener != null) {
+//                    addToCartListener.onAdd();
+//                }
+//            });
+//        }
+//    }
 
     @Override
     public int getItemCount() {

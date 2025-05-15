@@ -2,10 +2,11 @@ package com.example.smartstudent.model;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class ProductInfo {
+public class ProductInfo implements Serializable {
     public int id;
     private String name;
     private String price;
@@ -15,10 +16,18 @@ public class ProductInfo {
 
     public String description;
     public String clazz;
-    public Bitmap image; // 用于展示的图片
+    public String image; // 用于展示的图片
+
+    public List<MilkTeaAttribute> attributes;
 
     public ProductInfo() {
 
+    }
+
+    public ProductInfo(String name, String price, String category) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
     }
 
     public int getId() {
@@ -61,11 +70,11 @@ public class ProductInfo {
         this.clazz = clazz;
     }
 
-    public Bitmap getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Bitmap image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -77,15 +86,7 @@ public class ProductInfo {
         this.attributes = attributes;
     }
 
-    public List<MilkTeaAttribute> attributes;
 
-
-
-    public ProductInfo(String name, String price, String category) {
-        this.name = name;
-        this.price = price;
-        this.category = category;
-    }
 
     // 👉 添加 getter 方法
     public String getName() {

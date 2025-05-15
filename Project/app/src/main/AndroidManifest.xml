@@ -2,14 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 上网权限 -->
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 申请读取设备外部存储空间-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <!-- 申请使用摄像头的权限，摄像头不是必要的。-->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 申请读取设备外部存储空间 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 申请使用摄像头的权限，摄像头不是必要的。 -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -24,6 +22,9 @@
         android:theme="@style/Theme.SmartStudent"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity_student_ProductDetail"
+            android:exported="true" />
         <activity
             android:name=".Activity_admin_add_new_state"
             android:exported="true" />
@@ -44,7 +45,7 @@
             android:exported="true" />
         <activity
             android:name=".OrderDetailActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".SearchActivity"
             android:exported="true" />

@@ -53,7 +53,6 @@ dependencies {
     implementation(libs.android.sdk)
     implementation (libs.gson) // gson
     implementation ("androidx.recyclerview:recyclerview:1.3.1") //RecyclerView CoordinatorLayout
-    implementation ("com.google.android.material:material:1.9.0") //Material Components
     implementation("com.jinrishici:android-sdk:1.5") // poem
     implementation ("androidx.appcompat:appcompat:1.6.1") //AppCompat
     implementation ("com.google.android.material:material:1.10.0")//Material Components
@@ -82,6 +81,7 @@ dependencies {
     }
     implementation(libs.androidx.junit)
     implementation(libs.common)
+    implementation(libs.firebase.crashlytics.buildtools)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
