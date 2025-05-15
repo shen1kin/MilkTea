@@ -1,0 +1,6 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 选中时蓝底 -->
+    <item android:state_checked="true" android:color="@color/black" />
+    <!-- 默认白底 -->
+    <item android:color="@color/gray_button" />
+</selector>

@@ -13,6 +13,7 @@ mysqlConnectorJavaVersion = "8.0.28"
 firebaseFirestore = "25.1.4"
 androidxJunit = "1.2.1"
 common = "0.10.0"
+firebaseCrashlyticsBuildtools = "3.0.3"
 
 [libraries]
 android-sdk = { module = "com.jinrishici:android-sdk", version.ref = "androidSdk" }
@@ -28,6 +29,7 @@ mysql-mysql-connector-java = { module = "mysql:mysql-connector-java", version.re
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version = "24.4.5" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 common = { group = "com.google.ai.client.generativeai", name = "common", version.ref = "common" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
