@@ -1,7 +1,5 @@
 package com.example.smartstudent.adapter;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -10,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.smartstudent.Activity_student_ProductDetail;
 import com.example.smartstudent.R;
-import com.example.smartstudent.cart.CartManager;
+import com.example.smartstudent.model.Order;
 import com.example.smartstudent.model.ProductInfo;
 
 import java.util.List;
@@ -28,6 +24,8 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int TYPE_PRODUCT = 1;
 
     private final List<Object> itemList;
+
+    private OnProductClickListener listener;
 
     public interface OnAddToCartListener {
         void onAdd();
@@ -41,6 +39,14 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public ProductAdapter(List<Object> itemList) {
         this.itemList = itemList;
+    }
+    //定义接口,用于回调
+    public interface OnProductClickListener {
+        void onProductClick(ProductInfo product);
+    }
+    //设置监听方法
+    public void setOnProductClickListener(OnProductClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -93,10 +99,17 @@ public class ProductAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             //点击之后页面跳转到详细界面
             h.btnAddToCart.setOnClickListener(v -> {
-                Context context = holder.itemView.getContext();
-                Intent intent = new Intent(context, Activity_student_ProductDetail.class);
-                intent.putExtra("product", product);
-                context.startActivity(intent);
+
+                if (listener != null) {
+                    listener.onProductClick(product);
+                }
+//                Context context = holder.itemView.getContext();
+//                Intent intent = new Intent(context, Activity_student_ProductDetail.class);
+//                intent.putExtra("product", product);
+//                context.startActivity(intent);
+//
+//                void onProductClick(Product product); // 或其他你需要传的数据类型
+
             });
         }
     }

@@ -1,7 +1,5 @@
 package com.example.smartstudent.adapter;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartstudent.R;
 import com.example.smartstudent.cart.CartManager;
-import com.example.smartstudent.cart.CartOrderManager;
 import com.example.smartstudent.model.CartItem;
-import com.example.smartstudent.model.OrderAttribute;
 
-import java.io.File;
 import java.util.List;
 
-public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
+public class CartOrderAdapter extends RecyclerView.Adapter<CartOrderAdapter.CartViewHolder> {
 
     public interface OnCartChangeListener {
         void onCartChanged();
@@ -36,7 +31,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     private List<CartItem> items;
 
-    public CartAdapter(List<CartItem> items) {
+    public CartOrderAdapter(List<CartItem> items) {
         this.items = items;
     }
 
@@ -69,50 +64,30 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         CartItem item = items.get(position);
 
-        holder.tvName.setText(item.getOrderInfo().getName());
-        holder.tvPrice.setText(item.getOrderInfo().getTotalPrice());
+        holder.tvName.setText(item.getProduct().getName());
+        holder.tvPrice.setText(item.getProduct().getPrice());
         holder.tvCount.setText(String.valueOf(item.getCount()));
 
-        List<OrderAttribute> attributes = item.getOrderInfo().getAttributes();
-        StringBuilder tvSpecStr = new StringBuilder();
-        for (OrderAttribute attributesList : attributes){
-            String attribute_value = attributesList.getAttribute_value();
-            tvSpecStr.append(attribute_value);
-            tvSpecStr.append("/");
-        }
-
-
         // 设置规格字段，如无可使用默认描述
-        holder.tvSpec.setText(tvSpecStr);
+        holder.tvSpec.setText("默认规格");
 
         // 显示图片（如有字段可接入 Glide 等加载器）
-//        holder.itemImage.setImageResource(R.drawable.ic_launcher_background);
-        //图片获取
-        // 使用示例
-        String savedPath = item.getOrderInfo().getImageWay(); // 之前保存的路径
-        Bitmap bitmap = loadImageFromPath(savedPath);
-        if (bitmap != null) {
-            holder.itemImage.setImageBitmap(bitmap); // 正确方式显示 Bitmap
-        } else {
-            holder.itemImage.setImageResource(R.drawable.ic_launcher_background); // 加载失败用默认图
-        }
-
-
+        holder.itemImage.setImageResource(R.drawable.ic_launcher_background);
 
         holder.btnAdd.setOnClickListener(v -> {
-            CartOrderManager.add(item.getOrderInfo());
+            CartManager.add(item.getProduct());
             refresh();
             if (cartChangeListener != null) cartChangeListener.onCartChanged();
         });
 
         holder.btnMinus.setOnClickListener(v -> {
-            CartOrderManager.decrease(item.getOrderInfo());
+            CartManager.decrease(item.getProduct());
             refresh();
             if (cartChangeListener != null) cartChangeListener.onCartChanged();
         });
 
         holder.btnDelete.setOnClickListener(v -> {
-            CartOrderManager.remove(item.getOrderInfo());
+            CartManager.remove(item.getProduct());
             refresh();
             Toast.makeText(v.getContext(), "已删除商品", Toast.LENGTH_SHORT).show();
             if (cartChangeListener != null) cartChangeListener.onCartChanged();
@@ -120,19 +95,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     private void refresh() {
-        items = CartOrderManager.getItems();
+        items = CartManager.getItems();
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
         return items.size();
-    }
-
-    public Bitmap loadImageFromPath(String imagePath) {
-        if (imagePath == null || !new File(imagePath).exists()) {
-            return null;
-        }
-        return BitmapFactory.decodeFile(imagePath);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.smartstudent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -27,9 +30,11 @@ import com.example.smartstudent.adapter.CartAdapter;
 import com.example.smartstudent.adapter.CategoryAdapter;
 import com.example.smartstudent.adapter.ProductAdapter;
 import com.example.smartstudent.cart.CartManager;
+import com.example.smartstudent.cart.CartOrderManager;
 import com.example.smartstudent.model.CartItem;
 import com.example.smartstudent.model.Category;
 import com.example.smartstudent.model.MilkTeaAttribute;
+import com.example.smartstudent.model.Order;
 import com.example.smartstudent.model.OrderModeManager;
 import com.example.smartstudent.model.ProductInfo;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -46,6 +51,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
@@ -59,6 +65,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Fragment_student_course extends Fragment {
+    //判断是否已经从数据库中获取数据，获取了就不需要重新获取了
+    private boolean dataLoaded = false;
+
 
     private LinearLayout layoutContent,layoutProgressBar;
     private ProgressBar loadingSpinner;
@@ -72,9 +81,16 @@ public class Fragment_student_course extends Fragment {
 
     private List<Category> categoryList = new ArrayList<>();
     private List<Object> productList = new ArrayList<>();
+    //存储加入购物车的订单
+    private List<Order> orderList = new ArrayList<>();
+    //创建购物车清单管理类,
+    private CartOrderManager cartOrderManager;
+
 
     private boolean isScrollByClick = false;
     private int currentOrderMode = OrderModeManager.getCurrentMode();
+
+    private ActivityResultLauncher<Intent> productDetailLauncher;
 
     @Nullable
     @Override
@@ -91,9 +107,13 @@ public class Fragment_student_course extends Fragment {
         btnDelivery = view.findViewById(R.id.btnDelivery);
         Button btnCheckout = view.findViewById(R.id.btnCheckout);
 
+        layoutProgressBar = view.findViewById(R.id.layoutProgressBar);
+        loadingSpinner = view.findViewById(R.id.loading_spinner);
+        layoutContent = view.findViewById(R.id.layoutContent);
+
         recyclerCategory = view.findViewById(R.id.recyclerCategory);
         recyclerProducts = view.findViewById(R.id.recyclerProducts);
-
+        //监视购物车图标显示购物车清单
         cartIcon.setOnClickListener(v -> showCartDialog());
 
         etSearch.setOnClickListener(v -> {
@@ -109,23 +129,34 @@ public class Fragment_student_course extends Fragment {
         btnStorePickup.setOnClickListener(v -> setButtonState(true));
         btnDelivery.setOnClickListener(v -> setButtonState(false));
 
-
         //获取全部信息
         getMilkTeaInfo();
 
-        //未获取到信息画面转圈圈
-        layoutProgressBar = view.findViewById(R.id.layoutProgressBar);
-        loadingSpinner = view.findViewById(R.id.loading_spinner);
-        layoutContent = view.findViewById(R.id.layoutContent);
 
-        layoutProgressBar.setVisibility(View.VISIBLE);
-        loadingSpinner.setVisibility(View.VISIBLE);
-        layoutContent.setVisibility(View.GONE);
 
 
         // 初始状态
         setButtonState(OrderModeManager.isPickup());
 
+        //用于跳转页面，并等待返回结果
+        productDetailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                resultLauncher -> {
+                    if (resultLauncher.getResultCode() == Activity.RESULT_OK && resultLauncher.getData() != null) {
+                        Intent data = resultLauncher.getData();
+                        //返回加入购物车订单信息
+                        Order orderInfo = (Order) data.getSerializableExtra("orderInfo");
+                        Toast.makeText(requireContext(), "返回结果：" + orderInfo, Toast.LENGTH_SHORT).show();
+
+
+                        //将返回订单信息，加入到购物车清单
+                        Log.d("Test", "hashCode: " + orderInfo.hashCode());
+
+                        CartOrderManager.add(orderInfo);
+                        updateCartBadge();
+                    }
+                }
+        );
 
 
         return view;
@@ -171,7 +202,7 @@ public class Fragment_student_course extends Fragment {
         recyclerCategory.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerCategory.setAdapter(categoryAdapter);
     }
-    //更新分类高亮
+    //更新分类高亮，商品单独列表适配器
     private void setupProductRecycler() {
         productAdapter = new ProductAdapter(productList);
         productAdapter.setOnAddToCartListener(this::updateCartBadge);
@@ -197,8 +228,15 @@ public class Fragment_student_course extends Fragment {
                 }
             }
         });
-    }
 
+        //监听适配器回调，实现页面跳转
+        productAdapter.setOnProductClickListener(product -> {
+            Intent intent = new Intent(requireContext(), Activity_student_ProductDetail.class);
+            intent.putExtra("product", product); // 把商品对象传给详情页面
+            productDetailLauncher.launch(intent);
+        });
+    }
+    //显示购物车清单弹窗
     private void showCartDialog() {
         BottomSheetDialog dialog = new BottomSheetDialog(requireContext());
         View sheetView = LayoutInflater.from(getContext())
@@ -207,19 +245,19 @@ public class Fragment_student_course extends Fragment {
         RecyclerView cartRecycler = sheetView.findViewById(R.id.recyclerCart);
         TextView tvTotal = sheetView.findViewById(R.id.tvCartTotal);
         Button btnCheckout = sheetView.findViewById(R.id.btnCheckoutCart);
-
-        List<CartItem> items = CartManager.getItems();
+        //获取订单信息
+        List<CartItem> items = cartOrderManager.getItems();
         CartAdapter adapter = new CartAdapter(items);
 
         adapter.setOnCartChangeListener(() -> {
             updateCartBadge();
-            tvTotal.setText("合计：" + CartManager.getTotalPrice());
+            tvTotal.setText("合计：" + cartOrderManager.getTotalPrice());
         });
 
         cartRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         cartRecycler.setAdapter(adapter);
 
-        tvTotal.setText("合计：" + CartManager.getTotalPrice());
+        tvTotal.setText("合计：" + cartOrderManager.getTotalPrice());
 
         btnCheckout.setOnClickListener(v -> {
             dialog.dismiss();
@@ -234,11 +272,11 @@ public class Fragment_student_course extends Fragment {
     public void updateCartBadge() {
         if (cartBadge == null || cartTotal == null) return;
 
-        int count = CartManager.getTotalCount();
+        int count = cartOrderManager.getTotalCount();
         cartBadge.setText(String.valueOf(count));
         cartBadge.setVisibility(count > 0 ? View.VISIBLE : View.GONE);
 
-        cartTotal.setText(CartManager.getTotalPrice());
+        cartTotal.setText(cartOrderManager.getTotalPrice());
     }
 
     private void updateCategorySelection(int selectedIndex) {
@@ -259,6 +297,30 @@ public class Fragment_student_course extends Fragment {
     }
     //获取数据信息
     private void getMilkTeaInfo() {
+        //未获取到信息画面转圈圈
+        //判断是否获取过数据
+        if (dataLoaded) {
+            // 已经加载过数据，直接使用现有数据更新UI
+            layoutProgressBar.setVisibility(View.GONE);
+            loadingSpinner.setVisibility(View.GONE);
+            layoutContent.setVisibility(View.VISIBLE);
+
+            setupCategoryRecycler();
+            setupProductRecycler();
+            updateCartBadge();
+
+            return;
+        }else {
+            layoutProgressBar.setVisibility(View.VISIBLE);
+            loadingSpinner.setVisibility(View.VISIBLE);
+            layoutContent.setVisibility(View.GONE);
+        }
+
+
+
+
+
+
         // 启动子线程进行网络请求
         new Thread(() -> {
             try {
@@ -366,6 +428,9 @@ public class Fragment_student_course extends Fragment {
 
                                 // 使用 categoryList 和 productListByCategory 更新界面
                                 initAllDate(categoryToProductsMap);
+
+                                dataLoaded = true;
+
                                 setupCategoryRecycler();
                                 setupProductRecycler();
                                 updateCartBadge();
@@ -374,6 +439,10 @@ public class Fragment_student_course extends Fragment {
                                 layoutProgressBar.setVisibility(View.GONE);
                                 loadingSpinner.setVisibility(View.GONE);
                                 layoutContent.setVisibility(View.VISIBLE);
+
+
+
+
 
 
                             } catch (JSONException e) {

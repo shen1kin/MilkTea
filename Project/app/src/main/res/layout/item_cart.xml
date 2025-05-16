@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
-    <!-- 商品图片 -->
+    <!-- 区域1：商品图片 -->
     <ImageView
         android:id="@+id/itemImage"
         android:layout_width="64dp"
@@ -15,94 +15,110 @@
         android:src="@drawable/ic_launcher_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- 商品名称 -->
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="龙井・芝士糯糯"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:maxLines="1"
-        android:ellipsize="end"
-        app:layout_constraintStart_toEndOf="@id/itemImage"
-        app:layout_constraintTop_toTopOf="@id/itemImage"
-        app:layout_constraintEnd_toStartOf="@id/btnDelete"
-        app:layout_constraintHorizontal_bias="0"/>
-
-    <!-- 商品规格 -->
-    <TextView
-        android:id="@+id/tvSpec"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="热・少冰・芝士云顶"
-        android:textSize="13sp"
-        android:textColor="#888888"
-        app:layout_constraintTop_toBottomOf="@id/tvName"
-        app:layout_constraintStart_toStartOf="@id/tvName"
-        app:layout_constraintEnd_toEndOf="@id/tvName"/>
-
-    <!-- 商品价格 -->
-    <TextView
-        android:id="@+id/tvPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="¥21"
-        android:textSize="14sp"
-        android:textColor="#000000"
-        app:layout_constraintTop_toBottomOf="@id/tvSpec"
-        app:layout_constraintStart_toStartOf="@id/tvSpec" />
-
-    <!-- 数量操作区：水平 LinearLayout -->
+    <!-- 区域2：商品信息 -->
     <LinearLayout
-        android:id="@+id/quantityLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/tvPrice"
-        app:layout_constraintTop_toTopOf="@id/tvPrice">
-
-        <ImageButton
-            android:id="@+id/btnMinus"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:background="@null"
-            android:src="@drawable/jianshao"
-            android:scaleType="fitCenter"
-            android:contentDescription="减少" />
+        android:id="@+id/infoLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@id/itemImage"
+        app:layout_constraintEnd_toStartOf="@id/actionLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/tvCount"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:gravity="center"
-            android:text="1"
-            android:textSize="20sp" />
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="龙井・芝士糯糯"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
-        <ImageButton
-            android:id="@+id/btnAdd"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:background="@null"
-            android:src="@drawable/zengjia"
-            android:scaleType="fitCenter"
-            android:contentDescription="增加" />
+        <TextView
+            android:id="@+id/tvSpec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="热・少冰・芝士云顶热・少冰・芝士云顶热・少冰・芝士云顶热・少冰・芝士云顶"
+            android:textSize="13sp"
+            android:textColor="#888888"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="¥21"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:layout_marginTop="4dp" />
     </LinearLayout>
 
-    <!-- 删除按钮 -->
-    <ImageButton
-        android:id="@+id/btnDelete"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:background="@null"
-        android:src="@drawable/shanchu"
-        android:contentDescription="删除"
+    <!-- 区域3：按钮操作 -->
+    <LinearLayout
+        android:id="@+id/actionLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        android:scaleType="fitCenter"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- 占位视图，将删除按钮推到右边 -->
+        <View
+            android:layout_width="32dp"
+            android:layout_height="0dp" />
+
+        <!-- 删除按钮 -->
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@null"
+            android:src="@drawable/shanchu"
+            android:contentDescription="删除"
+            android:layout_gravity="end"
+            android:scaleType="fitCenter" />
+
+        <!-- 数量控制按钮组 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/btnMinus"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@null"
+                android:src="@drawable/jianshao"
+                android:scaleType="fitCenter"
+                android:contentDescription="减少" />
+
+            <TextView
+                android:id="@+id/tvCount"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:text="1"
+                android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/btnAdd"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@null"
+                android:src="@drawable/zengjia"
+                android:scaleType="fitCenter"
+                android:contentDescription="增加" />
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
