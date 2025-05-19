@@ -70,20 +70,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         CartItem item = items.get(position);
 
         holder.tvName.setText(item.getOrderInfo().getName());
-        holder.tvPrice.setText(item.getOrderInfo().getTotalPrice());
+        holder.tvPrice.setText(item.getOrderInfo().getPrice());
         holder.tvCount.setText(String.valueOf(item.getCount()));
 
-        List<OrderAttribute> attributes = item.getOrderInfo().getAttributes();
-        StringBuilder tvSpecStr = new StringBuilder();
-        for (OrderAttribute attributesList : attributes){
-            String attribute_value = attributesList.getAttribute_value();
-            tvSpecStr.append(attribute_value);
-            tvSpecStr.append("/");
-        }
-
-
         // 设置规格字段，如无可使用默认描述
-        holder.tvSpec.setText(tvSpecStr);
+        holder.tvSpec.setText(item.getOrderInfo().getFormattedAttributes());
 
         // 显示图片（如有字段可接入 Glide 等加载器）
 //        holder.itemImage.setImageResource(R.drawable.ic_launcher_background);

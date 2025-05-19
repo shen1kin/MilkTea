@@ -1,21 +1,21 @@
 package com.example.smartstudent.model;
 
-import com.example.smartstudent.model.ProductInfo;
+import java.io.Serializable;
 
-public class CartItem {
+public class CartItem implements Serializable {
 
     private ProductInfo product;
     private int count;
 
-    private Order orderInfo;
+    private OrderItem orderItemInfo;
 
     public CartItem(ProductInfo product, int count) {
         this.product = product;
         this.count = count;
     }
 
-    public CartItem(Order orderInfo, int count) {
-        this.orderInfo = orderInfo;
+    public CartItem(OrderItem orderItemInfo, int count) {
+        this.orderItemInfo = orderItemInfo;
         this.count = count;
     }
 
@@ -23,8 +23,8 @@ public class CartItem {
         this.product = product;
     }
 
-    public void setOrderInfo(Order orderInfo) {
-        this.orderInfo = orderInfo;
+    public void setOrderInfo(OrderItem orderItemInfo) {
+        this.orderItemInfo = orderItemInfo;
     }
 
     // ✅ 添加 getter 方法
@@ -42,7 +42,7 @@ public class CartItem {
         this.count = count;
     }
 
-    public Order getOrderInfo() {
-        return orderInfo;
+    public OrderItem getOrderInfo() {
+        return orderItemInfo;
     }
 }

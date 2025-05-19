@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartstudent.R;
-import com.example.smartstudent.model.Order;
 import com.example.smartstudent.model.ProductInfo;
 
 import java.util.List;

@@ -1,8 +1,7 @@
 package com.example.smartstudent.cart;
 
 import com.example.smartstudent.model.CartItem;
-import com.example.smartstudent.model.Order;
-import com.example.smartstudent.model.ProductInfo;
+import com.example.smartstudent.model.OrderItem;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,26 +11,31 @@ import java.util.Map;
 public class CartOrderManager {
     private static List<CartItem> cartItems = new ArrayList<>();
 
-    private static final Map<Order, Integer> cartMap = new LinkedHashMap<>();
+    private static final Map<OrderItem, Integer> cartMap = new LinkedHashMap<>();
 
-    public static void add(Order orderInfo) {
-        int count = cartMap.getOrDefault(orderInfo, orderInfo.getTotalCount());
-        cartMap.put(orderInfo, count + 1);
+    public static void add(OrderItem orderItemInfo) {
+        int count = cartMap.getOrDefault(orderItemInfo, 0);
+        cartMap.put(orderItemInfo, count + orderItemInfo.getCount());
+
     }
+    // 减少订单数量
+    public static void decrease(OrderItem orderItemInfo) {
+        int count = cartMap.getOrDefault(orderItemInfo, 0);
+        int newCount = count - orderItemInfo.getCount();
 
-    public static void decrease(Order orderInfo) {
-        int count = cartMap.getOrDefault(orderInfo, orderInfo.getTotalCount());
-        if (count > 1) {
-            cartMap.put(orderInfo, count - 1);
+        if (newCount > 0) {
+            cartMap.put(orderItemInfo, newCount);
         } else {
-            cartMap.remove(orderInfo);
+            cartMap.remove(orderItemInfo);
         }
     }
 
-    public static void remove(Order orderInfo) {
-        cartMap.remove(orderInfo);
+    // 移除整个订单（不管当前数量是多少）
+    public static void remove(OrderItem orderItemInfo) {
+        cartMap.remove(orderItemInfo);
     }
 
+    // 清空购物车
     public static void clear() {
         cartMap.clear();
     }
@@ -46,9 +50,9 @@ public class CartOrderManager {
 
     public static String getTotalPrice() {
         double total = 0;
-        for (Map.Entry<Order, Integer> entry : cartMap.entrySet()) {
+        for (Map.Entry<OrderItem, Integer> entry : cartMap.entrySet()) {
             try {
-                String priceStr = entry.getKey().getTotalPrice().replace("¥", "");
+                String priceStr = entry.getKey().getPrice().replace("¥", "");
                 total += Double.parseDouble(priceStr) * entry.getValue();
             } catch (Exception e) {
                 // 忽略解析错误
@@ -59,34 +63,15 @@ public class CartOrderManager {
 
     public static List<CartItem> getItems() {
         List<CartItem> list = new ArrayList<>();
-        for (Map.Entry<Order, Integer> entry : cartMap.entrySet()) {
+        for (Map.Entry<OrderItem, Integer> entry : cartMap.entrySet()) {
             list.add(new CartItem(entry.getKey(), entry.getValue()));
         }
         return list;
     }
 
-//    public static List<Order> getOrderInfoListWithCount() {
-//        List<Order> list = new ArrayList<>();
-//        for (CartItem item : cartItems) {
-//            Order p = item.getProduct();
-//            if (p != null) {
-//                Order copy = new Order();
-//                copy.id = p.id;
-//                copy.setName(p.getName());
-//                copy.setPrice(p.getPrice());
-//                copy.setCategory(p.getCategory());
-//                copy.description = p.description;
-//                copy.clazz = p.clazz;
-//                copy.image = p.image;
-//                copy.attributes = p.attributes;
-//                copy.setCount(item.getCount());
-//                list.add(copy);
-//            }
-//        }
-//        return list;
-//    }
-
-    public static Map<Order, Integer> getMap() {
+    public static Map<OrderItem, Integer> getCartMap() {
         return cartMap;
     }
+
+
 }

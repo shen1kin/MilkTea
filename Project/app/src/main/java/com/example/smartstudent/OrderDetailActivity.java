@@ -1,22 +1,28 @@
 package com.example.smartstudent;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.smartstudent.cart.CartOrderManager;
 import com.example.smartstudent.model.Order;
-import com.example.smartstudent.model.ProductInfo;
+import com.example.smartstudent.model.OrderItem;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
     private ImageView imgStep1, imgStep2, imgStep3;
     private TextView tvTitle, tvOrderDesc;
-    private TextView tvStore, tvTime, tvStatus, tvTotal, tvCount;
-    private LinearLayout layoutProductContainer;
+    private TextView tvStore, tvTime, tvStatus, tvCount;
+    private LinearLayout layoutOrderItemContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,24 +43,34 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvStore = findViewById(R.id.tvStoreName);
         tvTime = findViewById(R.id.tvOrderTime);
         tvStatus = findViewById(R.id.tvOrderTitle);
-        tvTotal = findViewById(R.id.tvTotalDetail);
         tvCount = findViewById(R.id.tvCountDetail);
-        layoutProductContainer = findViewById(R.id.layoutProductContainer); // 新增容器控件
+        layoutOrderItemContainer = findViewById(R.id.layoutProductContainer); // 新增容器控件
 
         // 接收订单数据
         Order order = (Order) getIntent().getSerializableExtra("order");
+
         if (order != null) {
             // 填充基础字段
             tvStore.setText(order.storeName);
             tvTime.setText(order.orderTime);
             tvStatus.setText(order.status);
-            tvTotal.setText("商品总价 " + order.totalPrice);
             tvCount.setText("共 " + order.totalCount + " 件商品，合计 " + order.totalPrice);
-
             updateOrderStatusUI(order.status); // 设置状态栏
+            //判断是前端还是后端传输的数据
+            //将List 转化为 Map，方便显示
+            if(order.orderItemInfoList != null)
+            {
+                CartOrderManager cartOrderManager = new CartOrderManager();
+                for(OrderItem orderItemInfo: order.orderItemInfoList) {
+                    cartOrderManager.add(orderItemInfo);
+                }
+                order.orderItemInfos = cartOrderManager.getCartMap();
+            }
 
-            // 动态添加商品项
-            addProductItems(order.productList);
+
+            addProductItems(order.getOrderItemInfos());
+
+
         }
     }
 
@@ -101,12 +117,15 @@ public class OrderDetailActivity extends AppCompatActivity {
     /**
      * 动态添加商品项视图
      */
-    private void addProductItems(List<ProductInfo> products) {
-        layoutProductContainer.removeAllViews(); // 清空旧内容
+    private void addProductItems(Map<OrderItem, Integer> orderItemInfos) {
+        layoutOrderItemContainer.removeAllViews(); // 清空旧内容
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        for (ProductInfo product : products) {
-            View itemView = inflater.inflate(R.layout.item_checkout, layoutProductContainer, false);
+        for (Map.Entry<OrderItem, Integer> entry : orderItemInfos.entrySet()) {
+            OrderItem orderItem = entry.getKey();
+            int countValue = entry.getValue(); // 或者你也可以用 orderItem.getCount()
+
+            View itemView = inflater.inflate(R.layout.item_checkout, layoutOrderItemContainer, false);
 
             ImageView img = itemView.findViewById(R.id.itemImage);
             TextView name = itemView.findViewById(R.id.tvName);
@@ -115,30 +134,26 @@ public class OrderDetailActivity extends AppCompatActivity {
             TextView count = itemView.findViewById(R.id.tvCount);
 
             // 填充数据
-//            img.setImageBitmap(product.getImage());
-            name.setText(product.getName());
-            spec.setText(getSpecText(product));
-            price.setText(product.getPrice());
-            count.setText("×" + product.getCount());
+            name.setText(orderItem.getName());
+            spec.setText(orderItem.getFormattedAttributes()); // 注意这个方法参数类型需支持 OrderItem
+            price.setText(orderItem.getPrice());
+            count.setText("×" + countValue);
+            //图片
+            String savedPath = orderItem.getImageWay(); // 之前保存的路径
+            Bitmap bitmap = loadImageFromPath(savedPath);
+            if (bitmap != null) {
+                img.setImageBitmap(bitmap);
+            }
 
-            layoutProductContainer.addView(itemView);
+            layoutOrderItemContainer.addView(itemView);
         }
     }
 
-    /**
-     * 获取规格组合文本（比如 冷/中杯/去冰/芝士顶）
-     */
-    private String getSpecText(ProductInfo product) {
-        StringBuilder sb = new StringBuilder();
-        if (product.getAttributes() != null) {
-            for (int i = 0; i < product.getAttributes().size(); i++) {
-                List<String> values = product.getAttributes().get(i).attribute_value;
-                if (values != null && !values.isEmpty()) {
-                    sb.append(values.get(0));
-                    if (i != product.getAttributes().size() - 1) sb.append("/");
-                }
-            }
+
+    public Bitmap loadImageFromPath(String imagePath) {
+        if (imagePath == null || !new File(imagePath).exists()) {
+            return null;
         }
-        return sb.toString();
+    return BitmapFactory.decodeFile(imagePath);
     }
 }

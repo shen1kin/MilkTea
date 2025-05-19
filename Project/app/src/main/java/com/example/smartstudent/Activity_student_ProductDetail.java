@@ -2,15 +2,12 @@ package com.example.smartstudent;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,16 +15,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.smartstudent.model.MilkTeaAttribute;
-import com.example.smartstudent.model.Order;
+import com.example.smartstudent.model.OrderItem;
 import com.example.smartstudent.model.OrderAttribute;
 import com.example.smartstudent.model.ProductInfo;
 import com.google.android.material.button.MaterialButton;
@@ -35,9 +28,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Activity_student_ProductDetail extends AppCompatActivity {
 
@@ -213,11 +204,11 @@ public class Activity_student_ProductDetail extends AppCompatActivity {
                     String totalPrice = String.valueOf(totalPriceInt);
                     //没有门店信息 下单时间 订单结束时间 配送方式 支付方式 订单状态 地址 订单号码 备注
                     //返回属性
-                    Order order = new Order(product.getName(),count,totalPrice,product.getId(),product.getClazz(),attributes,product.getImage());
+                    OrderItem orderItemInfo = new OrderItem(product.getName(),count,totalPrice,product.getId(),product.getClazz(),attributes,product.getImage());
 
                     //页面返回跳转，将order返回
                     Intent resultIntent = new Intent();
-                    resultIntent.putExtra("orderInfo", order); // 返回的数据
+                    resultIntent.putExtra("orderItemInfo", orderItemInfo); // 返回的数据
                     setResult(RESULT_OK, resultIntent);
                     finish(); // 关闭当前页面
                 }
