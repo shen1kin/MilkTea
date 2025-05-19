@@ -176,8 +176,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:divider="@drawable/divider_line"
-                    android:showDividers="middle"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
@@ -186,7 +184,9 @@
                     android:background="#A6A5A5"
                     android:layout_marginBottom="8dp"/>
 
-                <!-- 替换这个用于显示总价的 TextView -->
+                <!-- 替换这个用于显示总价的 TextView
+                 android:divider="@drawable/divider_line"
+                    android:showDividers="middle"-->
                 <TextView
                     android:id="@+id/tvTotalDetail"
                 android:layout_width="match_parent"

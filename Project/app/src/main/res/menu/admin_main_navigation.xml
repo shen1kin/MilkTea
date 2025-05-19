@@ -9,13 +9,13 @@
     <item
         android:id="@+id/admin_item_control_navigation"
         android:title="@string/admin_main_navigation2"
-        android:icon="@drawable/course"
+        android:icon="@drawable/score"
         />
 
     <item
         android:id="@+id/admin_score_navigation"
         android:title="@string/admin_main_navigation3"
-        android:icon="@drawable/score"
+        android:icon="@drawable/course"
         />
 
     <item
