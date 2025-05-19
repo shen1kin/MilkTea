@@ -36,7 +36,7 @@ public class Activity_admin_main extends AppCompatActivity {
                     loadFragment(new Fragment_admin_item_control());  // 切换到商品管理
                     return true;
                 case R.id.admin_score_navigation:
-                    loadFragment(new Fragment_admin_commodity());  // 切换到成绩设计
+                    loadFragment(new Fragment_admin_commodity());  // 切换到订单管理
                     return true;
                 case R.id.admin_profile_navigation:
                     loadFragment(new Fragment_admin_profile());  // 切换到个人中心
