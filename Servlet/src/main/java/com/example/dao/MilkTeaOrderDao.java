@@ -327,7 +327,7 @@ public class MilkTeaOrderDao {
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getInt(1);//66
             }
             return 0;
         }
