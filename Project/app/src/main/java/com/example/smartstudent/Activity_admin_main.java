@@ -13,6 +13,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Activity_admin_main extends AppCompatActivity {
 
+    private BottomNavigationView bottomNav; // 保存为成员变量
+
+
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +42,14 @@ public class Activity_admin_main extends AppCompatActivity {
                     loadFragment(new Fragment_admin_commodity());  // 切换到订单管理
                     return true;
                 case R.id.admin_profile_navigation:
-                    loadFragment(new Fragment_admin_feedback());  // 切换到个人中心
+                    loadFragment(new Fragment_admin_feedback());  // 切换到用户反馈
                     return true;
             }
             return false;
         });
+
+        // 默认加载首页
+        loadFragment(new Fragment_admin_home());
 
     }
 
@@ -59,6 +65,19 @@ public class Activity_admin_main extends AppCompatActivity {
 
         fragmentTransaction.replace(R.id.fragment_admin_main_container, fragment);
         fragmentTransaction.commit();
+
+        // 自动切换底部导航栏选中状态
+        if (bottomNav != null) {
+            if (fragment instanceof Fragment_admin_home) {
+                bottomNav.setSelectedItemId(R.id.admin_home_navigation);
+            } else if (fragment instanceof Fragment_admin_item_control) {
+                bottomNav.setSelectedItemId(R.id.admin_item_control_navigation);
+            } else if (fragment instanceof Fragment_admin_commodity) {
+                bottomNav.setSelectedItemId(R.id.admin_score_navigation);
+            } else if (fragment instanceof Fragment_admin_feedback) {
+                bottomNav.setSelectedItemId(R.id.admin_profile_navigation);
+            }
+        }
     }
 
 }

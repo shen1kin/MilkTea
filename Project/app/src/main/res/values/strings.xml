@@ -29,7 +29,7 @@
     <string name="admin_main_navigation1">首页</string>
     <string name="admin_main_navigation2">商品管理</string>
     <string name="admin_main_navigation3">订单管理</string>
-    <string name="admin_main_navigation4">我的</string>
+    <string name="admin_main_navigation4">用户反馈</string>
 
     <!--  fragment_student_profile  -->
     <string name="profile_name">姓名</string>

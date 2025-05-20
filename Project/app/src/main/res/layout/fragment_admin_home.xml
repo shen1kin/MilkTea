@@ -42,21 +42,22 @@
 
                 <TextView
                     android:text="今日订单"
-                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tvTodayOrders"
-                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
-                    android:text="38"
+                    android:layout_height="wrap_content"
+                    android:text="0"
                     android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="#333333"
                     android:layout_marginTop="8dp" />
             </LinearLayout>
+
 
             <!-- 总销售额 -->
             <LinearLayout
@@ -70,21 +71,22 @@
 
                 <TextView
                     android:text="今日收入"
-                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:textColor="#666666"
                     android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tvTodayRevenue"
-                    android:text="¥1,582"
-                    android:layout_height="match_parent"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="¥0"
                     android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="#333333"
                     android:layout_marginTop="8dp" />
             </LinearLayout>
+
         </LinearLayout>
 
         <!-- 快捷功能入口 -->
@@ -111,7 +113,7 @@
                 android:padding="16dp"
                 android:background="@drawable/bg_card"
                 android:layout_margin="6dp"
-                >
+                android:id="@+id/layoutOrderManage">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -137,7 +139,7 @@
                 android:padding="16dp"
                 android:background="@drawable/bg_card"
                 android:layout_margin="6dp"
-                >
+                android:id="@+id/layoutProductManage">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -164,7 +166,7 @@
                 android:padding="16dp"
                 android:background="@drawable/bg_card"
                 android:layout_margin="6dp"
-                >
+                android:id="@+id/layoutUserFeedback">
 
                 <ImageView
                     android:layout_width="36dp"

@@ -302,4 +302,32 @@ public class MilkTeaOrderDao {
             }
         }
     }
+
+
+    // 今日订单总数
+    public int getTodayOrderCount() throws SQLException {
+        String sql = "SELECT SUM(total_count) FROM MilkTeaOrder WHERE TO_DAYS(order_time) = TO_DAYS(NOW())";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
+
+    // 今日总收入
+    public double getTodayTotalRevenue() throws SQLException {
+        String sql = "SELECT SUM(CAST(REPLACE(total_price, '¥', '') AS DECIMAL(10,2))) FROM MilkTeaOrder WHERE TO_DAYS(order_time) = TO_DAYS(NOW())";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble(1);
+            }
+            return 0.0;
+        }
+    }
+
+
+
 }
