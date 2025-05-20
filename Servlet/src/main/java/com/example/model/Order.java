@@ -121,5 +121,8 @@ public class Order {
     public void setOrderItemInfos(List<OrderItem> orderItemInfos) {
         this.orderItemInfos = orderItemInfos;
     }
+
+    public void setOrder_id(int orderId) {
+    }
 }
 

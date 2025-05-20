@@ -19,6 +19,48 @@ public class MilkTeaOrderDao {
     public MilkTeaOrderDao() throws SQLException {
     }
 
+    // 查询的所有订单及其明细
+    public List<Order> getAllOrders() throws SQLException {
+        List<Order> orders = new ArrayList<>();
+
+        String orderSql = "SELECT * FROM MilkTeaOrder";
+        try (PreparedStatement ps = conn.prepareStatement(orderSql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Order order = new Order();
+                int orderId = rs.getInt("order_id");
+
+                order.setOrder_id(orderId);
+                order.setUserid(rs.getInt("userid"));
+                order.setStore_name(rs.getString("store_name"));
+                order.setTotal_count(rs.getInt("total_count"));
+                order.setTotal_price(rs.getString("total_price"));
+                order.setOrder_time(rs.getString("order_time"));
+                order.setPickup_method(rs.getString("pickup_method"));
+                order.setPay_method(rs.getString("pay_method"));
+                order.setStatus(rs.getString("status"));
+                order.setAddress(rs.getString("address"));
+                order.setOrder_num(rs.getString("order_num"));
+                order.setRemark(rs.getString("remark"));
+
+                String orderTimeEnd = rs.getString("order_time_end");
+                if (orderTimeEnd == null) {
+                    orderTimeEnd = "未完成";
+                }
+                order.setOrder_time_end(orderTimeEnd);
+
+                // 查询该订单的订单项
+                order.setOrderItemInfos(getOrderItemsByOrderId(orderId));
+                orders.add(order);
+            }
+        }
+
+        return orders;
+    }
+
+
+
     // 查询某个用户的所有订单及其明细
     public List<Order> getOrdersByUserId(int userId) throws SQLException {
         List<Order> orders = new ArrayList<>();
