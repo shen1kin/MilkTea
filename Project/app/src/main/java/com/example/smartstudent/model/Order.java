@@ -25,6 +25,9 @@ public class Order implements Serializable {
     private String payMethod;
     private String address;
     private String remark;
+    private int orderId;
+
+
 
     public Order(String storeName, String time, String status, String price, int totalCount, Map<OrderItem, Integer> orderItemInfos, int userid, String orderNum, String pickupMethod, String payMethod, String address, String remark) {
         this.storeName = storeName;
@@ -41,11 +44,28 @@ public class Order implements Serializable {
         this.remark = remark;
     }
 
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public List<OrderItem> getOrderItemInfoList() {
+        return orderItemInfoList;
+    }
+
+    public void setOrderItemInfoList(List<OrderItem> orderItemInfoList) {
+        this.orderItemInfoList = orderItemInfoList;
+    }
+
     public Order() {
 
     }
 
-    public Order(int userid, String storeName, int totalCount, String totalPrice, String orderTime, String pickupMethod, String payMethod, String status, String address, String orderNum, String remark, String orderTimeEnd, List<OrderItem> itemList) {
+    public Order(int orderId,int userid, String storeName, int totalCount, String totalPrice, String orderTime, String pickupMethod, String payMethod, String status, String address, String orderNum, String remark, String orderTimeEnd, List<OrderItem> itemList) {
+        this.orderId = orderId;
         this.storeName = storeName;
         this.orderTime = orderTime;
         this.status = status;

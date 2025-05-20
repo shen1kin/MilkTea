@@ -40,6 +40,7 @@ public class MilkTeaOrderAdminServlet extends HttpServlet {
             JSONArray orderArray = new JSONArray();
             for (Order order : orders) {
                 JSONObject orderJson = new JSONObject();
+                orderJson.put("order_id", order.getOrderid());
                 orderJson.put("userid", order.getUserid());
                 orderJson.put("store_name", order.getStore_name());
                 orderJson.put("total_count", order.getTotal_count());
@@ -104,41 +105,73 @@ public class MilkTeaOrderAdminServlet extends HttpServlet {
         out.flush();
     }
 
-
-
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // 读取请求体的JSON字符串
+        StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = request.getReader()) {
-            StringBuilder sb = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) sb.append(line);
-
-            String jsonStr = sb.toString();
-
-            // 输出接收到的原始JSON字符串到控制台
-            System.out.println("接收到的JSON数据：" + jsonStr);
-
-            // 用 Jackson 反序列化 JSON
-            ObjectMapper mapper = new ObjectMapper();
-            Order order = mapper.readValue(jsonStr, Order.class);
-
-            // 也可以把对象信息打印一下（需要Order实现toString）
-//            System.out.println("反序列化得到的Order对象：" + order);
-
-            // 调用 DAO 保存订单和商品属性
-            int orderId = orderDao.insertOrder(order);
-
-            // 遍历每个商品项插入属性
-            for (OrderItem item : order.getOrderItemInfos()) {
-                orderDao.insertOrderAttributes(orderId,item.getMilk_tea_id() ,item.getAttributes());
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
             }
+        }
 
-            response.getWriter().write("订单提交成功");
+        try {
+            JSONObject json = new JSONObject(sb.toString());
+
+            int orderId = json.getInt("order_id");
+            String status = json.getString("status");
+            String order_time_end = json.getString("order_time_end");
+
+            boolean updated = orderDao.updateOrderStatusAndOrderTimeEnd(orderId, status, order_time_end);
+
+            response.setContentType("application/json;charset=UTF-8");
+            if (updated) {
+                response.getWriter().write("{\"success\":true,\"message\":\"更新成功\"}");
+            } else {
+                response.getWriter().write("{\"success\":false,\"message\":\"更新失败\"}");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendError(500, "订单提交失败：" + e.getMessage());
+            response.setStatus(400);
+            response.getWriter().write("{\"success\":false,\"message\":\"请求数据格式错误\"}");
         }
     }
+
+
+
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        try (BufferedReader reader = request.getReader()) {
+//            StringBuilder sb = new StringBuilder();
+//            String line;
+//            while ((line = reader.readLine()) != null) sb.append(line);
+//
+//            String jsonStr = sb.toString();
+//
+//            // 输出接收到的原始JSON字符串到控制台
+//            System.out.println("接收到的JSON数据：" + jsonStr);
+//
+//            // 用 Jackson 反序列化 JSON
+//            ObjectMapper mapper = new ObjectMapper();
+//            Order order = mapper.readValue(jsonStr, Order.class);
+//
+//            // 也可以把对象信息打印一下（需要Order实现toString）
+////            System.out.println("反序列化得到的Order对象：" + order);
+//
+//            // 调用 DAO 保存订单和商品属性
+//            int orderId = orderDao.insertOrder(order);
+//
+//            // 遍历每个商品项插入属性
+//            for (OrderItem item : order.getOrderItemInfos()) {
+//                orderDao.insertOrderAttributes(orderId,item.getMilk_tea_id() ,item.getAttributes());
+//            }
+//
+//            response.getWriter().write("订单提交成功");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            response.sendError(500, "订单提交失败：" + e.getMessage());
+//        }
+//    }
 }
 

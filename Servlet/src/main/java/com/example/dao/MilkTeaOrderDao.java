@@ -31,7 +31,7 @@ public class MilkTeaOrderDao {
                 Order order = new Order();
                 int orderId = rs.getInt("order_id");
 
-                order.setOrder_id(orderId);
+                order.setOrderid(orderId);
                 order.setUserid(rs.getInt("userid"));
                 order.setStore_name(rs.getString("store_name"));
                 order.setTotal_count(rs.getInt("total_count"));
@@ -73,6 +73,7 @@ public class MilkTeaOrderDao {
                 while (rs.next()) {
                     Order order = new Order();
                     int orderId = rs.getInt("order_id"); // 记得主键叫id
+                    order.setOrderid(rs.getInt(orderId));
                     order.setUserid(rs.getInt("userid"));
                     order.setStore_name(rs.getString("store_name"));
                     order.setTotal_count(rs.getInt("total_count"));
@@ -304,30 +305,20 @@ public class MilkTeaOrderDao {
     }
 
 
-    // 今日订单总数
-    public int getTodayOrderCount() throws SQLException {
-        String sql = "SELECT SUM(total_count) FROM MilkTeaOrder WHERE TO_DAYS(order_time) = TO_DAYS(NOW())";
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-            return 0;
+    public boolean updateOrderStatusAndOrderTimeEnd(int orderId, String status, String orderTimeEnd) {
+        String sql = "UPDATE MilkTeaOrder SET status = ?, order_time_end = ? WHERE order_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setString(2, orderTimeEnd);
+            ps.setInt(3, orderId);
+
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
-
-    // 今日总收入
-    public double getTodayTotalRevenue() throws SQLException {
-        String sql = "SELECT SUM(CAST(REPLACE(total_price, '¥', '') AS DECIMAL(10,2))) FROM MilkTeaOrder WHERE TO_DAYS(order_time) = TO_DAYS(NOW())";
-        try (PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return rs.getDouble(1);
-            }
-            return 0.0;
-        }
-    }
-
-
 
 }

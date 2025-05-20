@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:layout_marginBottom="10dp"
+    android:elevation="1dp">
+
+    <!-- 顶部门店 + 状态 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginBottom="10dp"
+        >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tvStore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="广州软件学院店"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tvOrderTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2025-05-14 15:30"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="配送中"
+            android:textSize="14sp"
+            android:textColor="#FF9800"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+    <!-- 商品图片展示区 -->
+    <LinearLayout
+        android:id="@+id/layoutProductImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        android:gravity="start">
+
+        <!-- 动态添加商品图片 -->
+    </LinearLayout>
+
+    <!-- 总价与件数 -->
+    <!-- 总价与件数 + 按钮区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="8dp">
+
+        <!-- 左边：总价与件数 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvOrderTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="总价 ¥73.00"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tvOrderCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="共 6 件商品"
+                android:textSize="12sp"
+                android:textColor="#999999"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- 右边：3个按钮 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end">
+
+
+            <Button
+                android:id="@+id/btnRefund"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="商品退款"
+                android:textSize="12sp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginLeft="4dp"
+                android:backgroundTint="@color/tea_brown"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                />
+
+
+            <Button
+                android:id="@+id/btnDelivered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="商品送出"
+                android:textSize="12sp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginLeft="4dp"
+                android:backgroundTint="@color/tea_brown"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                />
+
+
+            <Button
+                android:id="@+id/btnComplete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="订单完成"
+                android:textSize="12sp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginLeft="4dp"
+                android:backgroundTint="@color/tea_brown"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

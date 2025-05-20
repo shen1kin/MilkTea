@@ -132,7 +132,7 @@ public class Fragment_student_score extends Fragment {
 
                                 for (int i = 0; i < ordersArray.length(); i++) {
                                     JSONObject orderObj = ordersArray.getJSONObject(i);
-
+                                    int order_id = orderObj.getInt("order_id");
                                     int userid = orderObj.getInt("userid");
                                     String store_name = orderObj.getString("store_name");
                                     int total_count = orderObj.getInt("total_count");
@@ -199,7 +199,7 @@ public class Fragment_student_score extends Fragment {
                                         itemList.add(new OrderItem(milk_tea_id, name, price, count, clazz, imageWay, attrList));
                                     }
 
-                                    Order order = new Order(userid, store_name, total_count, total_price, order_time, pickup_method, pay_method, status, address, order_num, remark, order_time_end, itemList);
+                                    Order order = new Order(order_id,userid, store_name, total_count, total_price, order_time, pickup_method, pay_method, status, address, order_num, remark, order_time_end, itemList);
 
                                     orderList.add(order);
                                 }

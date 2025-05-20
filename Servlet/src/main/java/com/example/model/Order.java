@@ -3,6 +3,7 @@ package com.example.model;
 import java.util.List;
 
 public class Order {
+    private int orderid;
     private int userid;
     private String store_name;
     private int total_count;
@@ -17,6 +18,16 @@ public class Order {
     private String order_time_end;
     private List<OrderItem> orderItemInfos;
 
+    public Order() {
+    }
+
+    public int getOrderid() {
+        return orderid;
+    }
+
+    public void setOrderid(int orderid) {
+        this.orderid = orderid;
+    }
 
     public int getUserid() {
         return userid;
@@ -120,9 +131,6 @@ public class Order {
 
     public void setOrderItemInfos(List<OrderItem> orderItemInfos) {
         this.orderItemInfos = orderItemInfos;
-    }
-
-    public void setOrder_id(int orderId) {
     }
 }
 
