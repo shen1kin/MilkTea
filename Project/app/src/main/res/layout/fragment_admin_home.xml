@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#EFEFEF"
     android:padding="16dp">
 
     <LinearLayout
@@ -87,13 +88,7 @@
         </LinearLayout>
 
         <!-- 快捷功能入口 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="管理入口"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+
 
         <!-- 功能列表 -->
         <GridLayout
@@ -104,31 +99,7 @@
             android:orientation="horizontal">
 
             <!-- 每个功能模块如下结构 -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_columnWeight="1"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="16dp"
-                android:background="@drawable/bg_card"
-                android:layout_margin="6dp"
-                android:onClick="onClickOrderManage">
 
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/goods"
-                    android:contentDescription="订单管理" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="订单管理"
-                    android:textColor="#000000"
-                    android:textSize="14sp"
-                    android:layout_marginTop="8dp" />
-            </LinearLayout>
 
             <!-- 商品管理 -->
             <LinearLayout
@@ -140,7 +111,7 @@
                 android:padding="16dp"
                 android:background="@drawable/bg_card"
                 android:layout_margin="6dp"
-                android:onClick="onClickProductManage">
+                >
 
                 <ImageView
                     android:layout_width="36dp"
@@ -157,6 +128,32 @@
                     android:layout_marginTop="8dp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_columnWeight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="16dp"
+                android:background="@drawable/bg_card"
+                android:layout_margin="6dp"
+                >
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:src="@drawable/goods"
+                    android:contentDescription="订单管理" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="订单管理"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+
             <!-- 用户反馈 -->
             <LinearLayout
                 android:layout_width="0dp"
@@ -167,7 +164,7 @@
                 android:padding="16dp"
                 android:background="@drawable/bg_card"
                 android:layout_margin="6dp"
-                android:onClick="onClickFeedback">
+                >
 
                 <ImageView
                     android:layout_width="36dp"
@@ -187,6 +184,70 @@
 
             <!-- 商品管理 / 用户反馈 / 门店设置 等可复制增加 -->
         </GridLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- 背景图 -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgStoreBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/mdbj"
+                    />
+
+                <!-- 底部遮罩文字区（高度仅字体高度） -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="#80000000"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:id="@+id/tvStoreTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="广州软件学院店·校园茶饮店"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvStoreAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="广州市从化区广从南路广州软件学院第二饭堂88号铺"
+                        android:textColor="#DDDDDD"
+                        android:textSize="13sp"
+                        android:layout_marginTop="2dp" />
+                </LinearLayout>
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
+        <Button
+            android:id="@+id/butExitLogin"
+            android:layout_width="350dp"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:backgroundTint="#000000"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:text="退出登录" />
 
     </LinearLayout>
 </ScrollView>
