@@ -1,5 +1,8 @@
 package com.example.smartstudent.adapter;
 
+import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartstudent.R;
 import com.example.smartstudent.model.CartItem;
 
+import java.io.File;
 import java.util.List;
 
 public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.CheckoutViewHolder> {
@@ -29,22 +33,30 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
         return new CheckoutViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CheckoutViewHolder holder, int position) {
         CartItem item = items.get(position);
 
-        holder.tvName.setText(item.getProduct().getName());
-        holder.tvPrice.setText(item.getProduct().getPrice());
-        holder.tvCount.setText("×" + item.getCount());
+        holder.tvName.setText(item.getOrderInfo().getName());
+        holder.tvPrice.setText(item.getOrderInfo().getPrice());
+        holder.tvCount.setText("×" + item.getOrderInfo().getCount());
 
         // 如果 ProductInfo 中有规格描述字段可以设置规格
-        holder.tvSpec.setText("冷/黑杯/少冰/芝士云顶"); // ✅ 可替换为 item.product.getSpec()
+        holder.tvSpec.setText(item.getOrderInfo().getFormattedAttributes());
 
         // 商品图片加载（如果你有图片字段）:
-        // 使用 Glide 等加载器：
-        // Glide.with(holder.itemView.getContext()).load(item.product.getImageUrl()).into(holder.itemImage);
+        //图片获取
+        // 使用示例
+        String savedPath = item.getOrderInfo().getImageWay(); // 之前保存的路径
+        Bitmap bitmap = loadImageFromPath(savedPath);
+        if (bitmap != null) {
+            holder.itemImage.setImageBitmap(bitmap);
+        }else {
+            holder.itemImage.setImageResource(R.drawable.ic_launcher_background); // 默认图
 
-        holder.itemImage.setImageResource(R.drawable.ic_launcher_background); // 默认图
+        }
+
     }
 
     @Override
@@ -64,5 +76,12 @@ public class CheckoutAdapter extends RecyclerView.Adapter<CheckoutAdapter.Checko
             tvPrice = itemView.findViewById(R.id.tvPrice);
             tvCount = itemView.findViewById(R.id.tvCount);
         }
+    }
+
+        public Bitmap loadImageFromPath(String imagePath) {
+        if (imagePath == null || !new File(imagePath).exists()) {
+            return null;
+        }
+        return BitmapFactory.decodeFile(imagePath);
     }
 }

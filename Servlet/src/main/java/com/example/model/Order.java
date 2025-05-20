@@ -1,110 +1,77 @@
 package com.example.model;
 
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 
 public class Order {
-    private String orderId;
-    private String userid;
-    private String name;
-    private int totalCount;
-    private String totalPrice;
-    private String storeName;
-    private String orderTime;
-    private String orderTimeEnd;
-    private String pickupMethod;
-    private String payMethod;
+    private int userid;
+    private String store_name;
+    private int total_count;
+    private String total_price;
+    private String order_time;
+    private String pickup_method;
+    private String pay_method;
     private String status;
     private String address;
-    private String orderNum;
+    private String order_num;
     private String remark;
-    private int milk_tae_id;
-    @JsonProperty("class")
-    private String clazz; // class 是关键字
-    private List<OrderAttribute> attributes;
+    private String order_time_end;
+    private List<OrderItem> orderItemInfos;
 
-    // Getters and setters
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getUserid() {
+    public int getUserid() {
         return userid;
     }
 
-    public void setUserid(String userid) {
+    public void setUserid(int userid) {
         this.userid = userid;
     }
 
-    public String getName() {
-        return name;
+    public String getStore_name() {
+        return store_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStore_name(String store_name) {
+        this.store_name = store_name;
     }
 
-    public int getTotalCount() {
-        return totalCount;
+    public int getTotal_count() {
+        return total_count;
     }
 
-    public void setTotalCount(int totalCount) {
-        this.totalCount = totalCount;
+    public void setTotal_count(int total_count) {
+        this.total_count = total_count;
     }
 
-    public String getTotalPrice() {
-        return totalPrice;
+    public String getTotal_price() {
+        return total_price;
     }
 
-    public void setTotalPrice(String totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotal_price(String total_price) {
+        this.total_price = total_price;
     }
 
-    public String getStoreName() {
-        return storeName;
+    public String getOrder_time() {
+        return order_time;
     }
 
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
+    public void setOrder_time(String order_time) {
+        this.order_time = order_time;
     }
 
-    public String getOrderTime() {
-        return orderTime;
+    public String getPickup_method() {
+        return pickup_method;
     }
 
-    public void setOrderTime(String orderTime) {
-        this.orderTime = orderTime;
+    public void setPickup_method(String pickup_method) {
+        this.pickup_method = pickup_method;
     }
 
-    public String getOrderTimeEnd() {
-        return orderTimeEnd;
+    public String getPay_method() {
+        return pay_method;
     }
 
-    public void setOrderTimeEnd(String orderTimeEnd) {
-        this.orderTimeEnd = orderTimeEnd;
-    }
-
-    public String getPickupMethod() {
-        return pickupMethod;
-    }
-
-    public void setPickupMethod(String pickupMethod) {
-        this.pickupMethod = pickupMethod;
-    }
-
-    public String getPayMethod() {
-        return payMethod;
-    }
-
-    public void setPayMethod(String payMethod) {
-        this.payMethod = payMethod;
+    public void setPay_method(String pay_method) {
+        this.pay_method = pay_method;
     }
 
     public String getStatus() {
@@ -123,12 +90,12 @@ public class Order {
         this.address = address;
     }
 
-    public String getOrderNum() {
-        return orderNum;
+    public String getOrder_num() {
+        return order_num;
     }
 
-    public void setOrderNum(String orderNum) {
-        this.orderNum = orderNum;
+    public void setOrder_num(String order_num) {
+        this.order_num = order_num;
     }
 
     public String getRemark() {
@@ -139,27 +106,20 @@ public class Order {
         this.remark = remark;
     }
 
-    public int getMilk_tae_id() {
-        return milk_tae_id;
+    public String getOrder_time_end() {
+        return order_time_end;
     }
 
-    public void setMilk_tae_id(int milk_tae_id) {
-        this.milk_tae_id = milk_tae_id;
+    public void setOrder_time_end(String order_time_end) {
+        this.order_time_end = order_time_end;
     }
 
-    public String getClazz() {
-        return clazz;
+    public List<OrderItem> getOrderItemInfos() {
+        return orderItemInfos;
     }
 
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
-    }
-
-    public List<OrderAttribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List<OrderAttribute> attributes) {
-        this.attributes = attributes;
+    public void setOrderItemInfos(List<OrderItem> orderItemInfos) {
+        this.orderItemInfos = orderItemInfos;
     }
 }
+

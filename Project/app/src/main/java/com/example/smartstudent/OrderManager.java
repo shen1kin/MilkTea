@@ -1,19 +1,19 @@
 package com.example.smartstudent;
 
-import com.example.smartstudent.model.Order;
+import com.example.smartstudent.model.OrderItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OrderManager {
 
-    private static final List<Order> orders = new ArrayList<>();
+    private static final List<OrderItem> ORDER_ITEMS = new ArrayList<>();
 
-    public static void addOrder(Order order) {
-        orders.add(0, order); // 新订单放在最前
+    public static void addOrder(OrderItem orderItem) {
+        ORDER_ITEMS.add(0, orderItem); // 新订单放在最前
     }
 
-    public static List<Order> getOrders() {
-        return orders;
+    public static List<OrderItem> getOrders() {
+        return ORDER_ITEMS;
     }
 }

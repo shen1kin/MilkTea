@@ -29,16 +29,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartstudent.adapter.CartAdapter;
 import com.example.smartstudent.adapter.CategoryAdapter;
 import com.example.smartstudent.adapter.ProductAdapter;
-import com.example.smartstudent.cart.CartManager;
 import com.example.smartstudent.cart.CartOrderManager;
 import com.example.smartstudent.model.CartItem;
 import com.example.smartstudent.model.Category;
 import com.example.smartstudent.model.MilkTeaAttribute;
-import com.example.smartstudent.model.Order;
+import com.example.smartstudent.model.OrderItem;
 import com.example.smartstudent.model.OrderModeManager;
 import com.example.smartstudent.model.ProductInfo;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +44,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,14 +51,9 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class Fragment_student_course extends Fragment {
@@ -82,9 +74,9 @@ public class Fragment_student_course extends Fragment {
     private List<Category> categoryList = new ArrayList<>();
     private List<Object> productList = new ArrayList<>();
     //存储加入购物车的订单
-    private List<Order> orderList = new ArrayList<>();
+    private List<OrderItem> orderItemList = new ArrayList<>();
     //创建购物车清单管理类,
-    private CartOrderManager cartOrderManager;
+    private CartOrderManager cartOrderManager =  new CartOrderManager();;
 
 
     private boolean isScrollByClick = false;
@@ -122,8 +114,11 @@ public class Fragment_student_course extends Fragment {
         });
 
         btnCheckout.setOnClickListener(v -> {
+            List<CartItem> items = cartOrderManager.getItems();
             OrderModeManager.setCurrentMode(currentOrderMode);
-            startActivity(new Intent(getActivity(), CheckoutActivity.class));
+            Intent intent = new Intent(getActivity(), CheckoutActivity.class);
+            intent.putExtra("cart_items", (Serializable) items); // 强转成 Serializable
+            startActivity(intent);
         });
 
         btnStorePickup.setOnClickListener(v -> setButtonState(true));
@@ -145,14 +140,14 @@ public class Fragment_student_course extends Fragment {
                     if (resultLauncher.getResultCode() == Activity.RESULT_OK && resultLauncher.getData() != null) {
                         Intent data = resultLauncher.getData();
                         //返回加入购物车订单信息
-                        Order orderInfo = (Order) data.getSerializableExtra("orderInfo");
-                        Toast.makeText(requireContext(), "返回结果：" + orderInfo, Toast.LENGTH_SHORT).show();
+                        OrderItem orderItemInfo = (OrderItem) data.getSerializableExtra("orderItemInfo");
+                        Toast.makeText(requireContext(), "返回结果：" + orderItemInfo, Toast.LENGTH_SHORT).show();
 
 
                         //将返回订单信息，加入到购物车清单
-                        Log.d("Test", "hashCode: " + orderInfo.hashCode());
+                        Log.d("Test", "hashCode: " + orderItemInfo.hashCode());
 
-                        CartOrderManager.add(orderInfo);
+                        CartOrderManager.add(orderItemInfo);
                         updateCartBadge();
                     }
                 }
@@ -259,10 +254,18 @@ public class Fragment_student_course extends Fragment {
 
         tvTotal.setText("合计：" + cartOrderManager.getTotalPrice());
 
+//        btnCheckout.setOnClickListener(v -> {
+//            dialog.dismiss();
+//            OrderModeManager.setCurrentMode(currentOrderMode);
+//            startActivity(new Intent(getActivity(), CheckoutActivity.class));
+//        });
+
         btnCheckout.setOnClickListener(v -> {
             dialog.dismiss();
             OrderModeManager.setCurrentMode(currentOrderMode);
-            startActivity(new Intent(getActivity(), CheckoutActivity.class));
+            Intent intent = new Intent(getActivity(), CheckoutActivity.class);
+            intent.putExtra("cart_items", (Serializable) items);
+            startActivity(intent);
         });
 
         dialog.setContentView(sheetView);
