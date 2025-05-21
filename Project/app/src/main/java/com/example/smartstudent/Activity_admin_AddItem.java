@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -205,64 +206,44 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.activity_admin_add_state, null);
         dialog.setContentView(dialogView);
 
-        // 确保获取正确的父容器
-        ViewGroup parent = (ViewGroup) dialogView.getParent();
-
-        // 使用正确的Behavior获取方式
-        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(parent);
-
-        // 设置高度参数
+        // 获取屏幕高度
         int screenHeight = getResources().getDisplayMetrics().heightPixels;
-        behavior.setPeekHeight((int)(screenHeight * 0.5));
-        behavior.setMaxHeight((int)(screenHeight * 0.8)); // 设置最大高度
-        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        // 确保窗口参数生效
-        dialog.getWindow().setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-
-
-        //创建弹窗AlertDialog构建器
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //获取弹窗内组件
-        RecyclerView rvOptions = dialogView.findViewById(R.id.rvStateOption);
-        //设置布局为垂直线性排列。
-        rvOptions.setLayoutManager(new LinearLayoutManager(this));
-        // 创建列表适配器，传入所有选项数据和目标 ChipGroup
-        //创建并设置一个自定义的 RecyclerView.Adapter（OptionAdapter）。
-        //allStateOption 是所有可供选择的选项（可能是一个 List<String>）。  后面从服务器获取
-        //targetChipGroup 是要将选项添加到的 ChipGroup。
-        //每当用户点击某个选项时，adapter 内部会创建一个 Chip 并添加到该 ChipGroup。
-        StateAdapter adapter = new StateAdapter(this, getAvailableStates(), state -> {
-            // 当点击某个状态后：
-            selectedStates.add(state); // 标记为已选
-            dialog.dismiss();          // 关闭弹窗
-            // 你可以在这里执行添加 Chip 的操作，或者刷新 UI 显示
-            // 将状态添加界面
-            addStatusModule(state);
-        });
-
-        rvOptions.setAdapter(adapter);
-        //设置对话框的内容视图为刚刚加载的 dialog_add_option.xml。
-        //创建并展示对话框。
-        builder.setView(dialogView);
-
-        butAddNewState = dialogView.findViewById(R.id.butAddNewState);
-        //按钮添加新属性
-        butAddNewState.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Activity_admin_AddItem.this, Activity_admin_add_new_state.class);
-                startActivity(intent);
+        // 设置对话框展示时的行为
+        dialog.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                behavior.setPeekHeight((int)(screenHeight * 0.5));
+                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                // 设置最大高度
+                bottomSheet.getLayoutParams().height = (int)(screenHeight * 0.8);
+                bottomSheet.requestLayout();
             }
         });
 
+        // 设置 RecyclerView
+        RecyclerView rvOptions = dialogView.findViewById(R.id.rvStateOption);
+        rvOptions.setLayoutManager(new LinearLayoutManager(this));
+        StateAdapter adapter = new StateAdapter(this, getAvailableStates(), state -> {
+            selectedStates.add(state);
+            dialog.dismiss();
+            addStatusModule(state);
+        });
+        rvOptions.setAdapter(adapter);
+
+        // 添加新状态按钮
+        Button butAddNewState = dialogView.findViewById(R.id.butAddNewState);
+        butAddNewState.setOnClickListener(view -> {
+            Intent intent = new Intent(Activity_admin_AddItem.this, Activity_admin_add_new_state.class);
+            startActivity(intent);
+        });
 
 
         dialog.show();
     }
+
     //参数 是 状态 ，将状态返回到主界面，并且在主界面动态创建新组件
     @SuppressLint("SetTextI18n")
     public void addStatusModule(String state) {
@@ -450,10 +431,6 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         EditText price = findViewById(R.id.etPrice);
         TextView classes = findViewById(R.id.tvClass);
         EditText description = findViewById(R.id.etIntro);
-        //处理图片转化为byte[]
-        byte[] image = getImageBytes(imageUri);
-        //将图片转换为 Base64 字符串
-        String imageBase64  = Base64.getEncoder().encodeToString(image);
 
         // 获取输入的内容
         String itemName = name.getText().toString().trim();
@@ -481,6 +458,11 @@ public class Activity_admin_AddItem extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "请上传图片", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        //处理图片转化为byte[]
+        byte[] image = getImageBytes(imageUri);
+        //将图片转换为 Base64 字符串
+        String imageBase64  = Base64.getEncoder().encodeToString(image);
 
         if (itemClass.isEmpty()) {
             Toast.makeText(getApplicationContext(), "分类不能为空", Toast.LENGTH_SHORT).show();
