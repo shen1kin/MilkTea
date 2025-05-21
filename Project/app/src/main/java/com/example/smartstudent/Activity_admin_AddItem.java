@@ -1,6 +1,7 @@
 package com.example.smartstudent;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -666,7 +667,7 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         return byteArrayOutputStream.toByteArray();
     }
 
-    //"可添加状态"窗口
+    //"可添加分类"窗口
     @SuppressLint("SetTextI18n")
     public void addClassView() {
         //后端获取属性信息
@@ -751,57 +752,113 @@ public class Activity_admin_AddItem extends AppCompatActivity {
         View dialogView = getLayoutInflater().inflate(R.layout.activity_admin_add_class, null);
         dialog.setContentView(dialogView);
 
-        // 确保获取正确的父容器
         ViewGroup parent = (ViewGroup) dialogView.getParent();
-
-        // 使用正确的Behavior获取方式
         BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(parent);
 
-        // 设置高度参数
         int screenHeight = getResources().getDisplayMetrics().heightPixels;
         behavior.setPeekHeight((int)(screenHeight * 0.5));
-        behavior.setMaxHeight((int)(screenHeight * 0.8)); // 设置最大高度
+        behavior.setMaxHeight((int)(screenHeight * 0.8));
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        // 确保窗口参数生效
         dialog.getWindow().setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
 
-
-        //创建弹窗AlertDialog构建器
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        //获取弹窗内组件
         RecyclerView rvOptions = dialogView.findViewById(R.id.rvClassOption);
-        //设置布局为垂直线性排列。
         rvOptions.setLayoutManager(new LinearLayoutManager(this));
+
         ClassAdapter adapter = new ClassAdapter(allClassOptions, new ClassAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String item) {
                 tvClass.setText(item);
-                dialog.dismiss(); // 关闭 BottomSheetDialog
+                dialog.dismiss();
+            }
+        });
+        rvOptions.setAdapter(adapter);
+
+        Button butAddNewClass = dialogView.findViewById(R.id.butAddNewClass);
+        butAddNewClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final EditText input = new EditText(Activity_admin_AddItem.this);
+                input.setHint("请输入新分类名");
+
+                int padding = (int) (16 * getResources().getDisplayMetrics().density);
+                input.setPadding(padding, padding, padding, padding);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(Activity_admin_AddItem.this);
+                builder.setTitle("新分类名称")
+                        .setView(input)
+                        .setCancelable(false)
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                String className = input.getText().toString().trim();
+                                if (!className.isEmpty()) {
+                                    addClass(className, dialog);  // 传递dialog方便关闭
+                                } else {
+                                    Toast.makeText(Activity_admin_AddItem.this, "分类名不能为空", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                builder.show();
             }
         });
 
-        rvOptions.setAdapter(adapter);
-        //设置对话框的内容视图为刚刚加载的 dialog_add_option.xml。
-        //创建并展示对话框。
-        builder.setView(dialogView);
-
-//        butAddNewState = dialogView.findViewById(R.id.butAddNewState);
-//        TODO:按钮添加新属性
-//        butAddNewState.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(Activity_admin_AddItem.this, Activity_admin_add_new_state.class);
-//                startActivity(intent);
-//            }
-//        });
-
-
-
         dialog.show();
+    }
+
+    private void addClass(String className, BottomSheetDialog dialog){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("http://10.0.2.2:8083/Servlet_war_exploded/milk-tea-class"); // 替换为实际地址
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    conn.setDoOutput(true);
+                    conn.setDoInput(true);
+
+                    JSONObject json = new JSONObject();
+                    json.put("class_name", className); // 只传分类名
+
+                    OutputStream os = conn.getOutputStream();
+                    os.write(json.toString().getBytes("UTF-8"));
+                    os.close();
+
+                    int code = conn.getResponseCode();
+                    if (code == 200) {
+                        InputStream is = conn.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                        final StringBuilder result = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);
+                        }
+                        reader.close();
+
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), "添加成功: " + result.toString(), Toast.LENGTH_LONG).show();
+                            dialog.dismiss(); // 关闭分类弹窗
+                            // 这里你可以刷新分类列表，重新请求服务器获取最新分类数据
+                        });
+                    } else {
+                        runOnUiThread(() -> {
+                            Toast.makeText(getApplicationContext(), "连接失败，错误码：" + code, Toast.LENGTH_SHORT).show();
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(() -> {
+                        Toast.makeText(getApplicationContext(), "异常: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+                }
+            }
+        }).start();
     }
 
 
