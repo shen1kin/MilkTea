@@ -52,6 +52,15 @@ public class OrderItem implements Serializable {
 
     }
 
+    public OrderItem(int milkTeaId, String name, String price, int count, String imageWay, List<OrderAttribute> attrList) {
+        this.milk_tae_id = milkTeaId;
+        this.name = name;
+        this.price = price;
+        this.count = count;
+        this.attributes = attrList;
+        this.imageWay = imageWay;
+    }
+
     @Override
     public boolean equals(Object ob) {
         if (this == ob) return true;

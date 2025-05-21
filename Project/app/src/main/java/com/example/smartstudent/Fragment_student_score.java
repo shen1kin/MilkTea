@@ -156,7 +156,6 @@ public class Fragment_student_score extends Fragment {
                                         String name = itemObj.getString("name");
                                         String price = itemObj.getString("price");
                                         int count = itemObj.getInt("count");
-                                        String clazz = itemObj.getString("class");
                                         String imageWay = "";
                                         // 图片处理 Base64 解码部分
                                         String base64 = itemObj.getString("image64");
@@ -196,7 +195,7 @@ public class Fragment_student_score extends Fragment {
                                             attrList.add(new OrderAttribute(attribute, attribute_value));
                                         }
 
-                                        itemList.add(new OrderItem(milk_tea_id, name, price, count, clazz, imageWay, attrList));
+                                        itemList.add(new OrderItem(milk_tea_id, name, price, count, imageWay, attrList));
                                     }
 
                                     Order order = new Order(order_id,userid, store_name, total_count, total_price, order_time, pickup_method, pay_method, status, address, order_num, remark, order_time_end, itemList);

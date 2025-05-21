@@ -43,6 +43,7 @@ public class MilkTeaOrderServlet extends HttpServlet {
             JSONArray orderArray = new JSONArray();
             for (Order order : orders) {
                 JSONObject orderJson = new JSONObject();
+                orderJson.put("order_id", order.getOrderid());
                 orderJson.put("userid", order.getUserid());
                 orderJson.put("store_name", order.getStore_name());
                 orderJson.put("total_count", order.getTotal_count());
@@ -64,7 +65,6 @@ public class MilkTeaOrderServlet extends HttpServlet {
                     itemJson.put("name", item.getName());
                     itemJson.put("price", item.getPrice());
                     itemJson.put("count", item.getCount());
-                    itemJson.put("class", item.getClazz());
 //                    itemJson.put("imageWay", item.getImageWay());
                     // 获取图片的二进制数据并转为 Base64
                     String base64Image = Base64.getEncoder().encodeToString(item.getImage()); // 将二进制数据转换为 Base64 字符串
