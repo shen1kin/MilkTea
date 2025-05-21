@@ -72,8 +72,8 @@ public class MilkTeaOrderDao {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Order order = new Order();
-                    int orderId = rs.getInt("order_id"); // 记得主键叫id
-                    order.setOrderid(rs.getInt(orderId));
+                    int orderId = rs.getInt("order_id"); // 从数据库结果集中取出主键 id
+                    order.setOrderid(orderId); // ✅ 直接赋值即可
                     order.setUserid(rs.getInt("userid"));
                     order.setStore_name(rs.getString("store_name"));
                     order.setTotal_count(rs.getInt("total_count"));

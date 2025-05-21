@@ -107,33 +107,6 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <!--订单数量-->
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-
-                <TextView
-                    style="@style/tvItemListStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="订单数量："
-                    />
-
-                <TextView
-                    style="@style/tvItemListStyle"
-                    android:id="@+id/tvItemNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/gray_dark"
-                    android:paddingStart="5dp"
-                    android:text="名称"
-                    />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-            
             <!--商品价格-->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"

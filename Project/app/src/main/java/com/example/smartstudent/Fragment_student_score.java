@@ -145,7 +145,6 @@ public class Fragment_student_score extends Fragment {
                                     String order_num = orderObj.getString("order_num");
                                     String remark = orderObj.getString("remark");
                                     String order_time_end = orderObj.getString("order_time_end");
-
                                     JSONArray itemArray = orderObj.getJSONArray("orderItemInfos");
                                     List<OrderItem> itemList = new ArrayList<>();
 

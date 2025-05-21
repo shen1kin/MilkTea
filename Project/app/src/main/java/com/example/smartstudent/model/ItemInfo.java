@@ -9,10 +9,27 @@ public class ItemInfo {
     private String  item_state;
     private String  item_price;
 
+    private boolean isDeleted;  // 新增字段，表示是否下架
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
     public ItemInfo(int item_id, String item_name, String item_num, String item_state, String item_price) {
         this.item_id = item_id;
         this.item_name = item_name;
         this.item_num = item_num;
+        this.item_state = item_state;
+        this.item_price = item_price;
+    }
+
+    public ItemInfo(int item_id, String item_name ,String item_state, String item_price) {
+        this.item_id = item_id;
+        this.item_name = item_name;
         this.item_state = item_state;
         this.item_price = item_price;
     }

@@ -17,6 +17,16 @@ import java.util.List;
 
 public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemListHolder> {
     private List<ItemInfo> item_info = new ArrayList<>();
+    private OnItemClickListener itemClickListener;
+
+    // 点击事件回调接口
+    public interface OnItemClickListener {
+        void onItemClick(ItemInfo item);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
 
     public ItemListAdapter(List<ItemInfo> list) {
         this.item_info = list;
@@ -39,8 +49,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         holder.tvItemName.setText(itemInfo.getItem_name());
         holder.tvItemId.setText(String.valueOf(itemInfo.getItem_id()));
         holder.tvItemState.setText(itemInfo.getItem_state());
-        holder.tvItemNum.setText(itemInfo.getItem_num());
         holder.tvItemPrice.setText(itemInfo.getItem_price());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(itemInfo);
+            }
+        });
     }
 
     @Override
@@ -61,7 +76,6 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
             tvItemName = itemView.findViewById(R.id.tvItemName);
             tvItemId = itemView.findViewById(R.id.tvItemId);
             tvItemState = itemView.findViewById(R.id.tvItemState);
-            tvItemNum = itemView.findViewById(R.id.tvItemNum);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
 
 
