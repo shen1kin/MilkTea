@@ -1,5 +1,7 @@
 package com.example.smartstudent;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -108,10 +110,29 @@ public class Fragment_student_course extends Fragment {
         //监视购物车图标显示购物车清单
         cartIcon.setOnClickListener(v -> showCartDialog());
 
+
+
+        // 然后传递给下一个界面
         etSearch.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), SearchActivity.class);
-            startActivity(intent);
+            // 假设productList是 List<Object>
+            List<ProductInfo> productInfoList = new ArrayList<>();
+
+            for (Object obj : productList) {
+                if (obj instanceof ProductInfo) {
+                    productInfoList.add((ProductInfo) obj);
+                }
+            }
+
+            if (!productInfoList.isEmpty()) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                intent.putExtra("productList", (Serializable) productInfoList);
+                startActivityForResult(intent, 123);
+            } else {
+                Toast.makeText(getContext(), "未获取到数据", Toast.LENGTH_SHORT).show();
+            }
         });
+
+
 
         btnCheckout.setOnClickListener(v -> {
             List<CartItem> items = cartOrderManager.getItems();
@@ -137,7 +158,7 @@ public class Fragment_student_course extends Fragment {
         productDetailLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 resultLauncher -> {
-                    if (resultLauncher.getResultCode() == Activity.RESULT_OK && resultLauncher.getData() != null) {
+                    if (resultLauncher.getResultCode() == RESULT_OK && resultLauncher.getData() != null) {
                         Intent data = resultLauncher.getData();
                         //返回加入购物车订单信息
                         OrderItem orderItemInfo = (OrderItem) data.getSerializableExtra("orderItemInfo");
@@ -163,6 +184,41 @@ public class Fragment_student_course extends Fragment {
         // 每次页面切换回来都刷新状态
         setButtonState(OrderModeManager.isPickup());
     }
+    //搜索回来定位商品信息
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 123 && resultCode == RESULT_OK && data != null) {
+            int id = data.getIntExtra("selectedProductId", -1);
+            if (id != -1) {
+                ProductInfo product = findProductById(id);
+                if (product != null) {
+                    // 直接跳转详情页
+                    Intent intent = new Intent(requireContext(), Activity_student_ProductDetail.class);
+                    intent.putExtra("product", product);
+                    productDetailLauncher.launch(intent);
+                }
+            }
+        }
+    }
+
+
+
+    // 根据商品名查找索引
+    private ProductInfo findProductById(int id) {
+        for (Object obj : productList) {
+            if (obj instanceof ProductInfo) {
+                ProductInfo p = (ProductInfo) obj;
+                if (p.getId() == id) {
+                    return p;
+                }
+            }
+        }
+        return null;
+    }
+
+
+
 
     private void setButtonState(boolean isPickupSelected) {
         currentOrderMode = isPickupSelected ? OrderModeManager.PICKUP : OrderModeManager.DELIVERY;

@@ -45,6 +45,8 @@
         android:gravity="center"
         android:paddingHorizontal="12dp"
         android:textColor="@color/black"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintTop_toTopOf="@id/editSearch"
         app:layout_constraintBottom_toBottomOf="@id/editSearch"
         app:layout_constraintEnd_toEndOf="parent" />
