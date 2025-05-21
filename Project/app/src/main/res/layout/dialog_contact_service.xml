@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="@drawable/bg_card"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/tvContactMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="客服电话\n产品客服10086\n技术客服10000"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:lineSpacingExtra="6dp" />
+</LinearLayout>

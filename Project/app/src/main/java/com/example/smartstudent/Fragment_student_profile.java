@@ -37,12 +37,12 @@ public class Fragment_student_profile extends Fragment {
 
         // 准备数据
         List<VipserveItem> services = new ArrayList<>();
-        services.add(new VipserveItem("会员码", R.drawable.vip_code, hello.class));
-        services.add(new VipserveItem("任务中心", R.drawable.task_centres, hello.class));
-        services.add(new VipserveItem("发票助手", R.drawable.receipt, hello.class));
+        services.add(new VipserveItem("会员码", R.drawable.vip_code, hello.class)); //接到功能未实现弹窗dialog_feature_not_ready.xml
+        services.add(new VipserveItem("用户反馈", R.drawable.feedback, hello.class)); //接到功能未实现弹窗dialog_feature_not_ready.xml
+        services.add(new VipserveItem("发票助手", R.drawable.receipt, hello.class)); //接到功能未实现弹窗dialog_feature_not_ready.xml
         services.add(new VipserveItem("联系客服", R.drawable.service, hello.class));
         services.add(new VipserveItem("设置", R.drawable.set, Activity_student_set.class));
-        services.add(new VipserveItem("更多", R.drawable.more, hello.class));
+        services.add(new VipserveItem("退出登录", R.drawable.tuichu, null));
 
         // 设置RecyclerView
         RecyclerView recyclerView = view.findViewById(R.id.menu_recycler);

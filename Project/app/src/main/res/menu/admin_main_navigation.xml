@@ -18,10 +18,5 @@
         android:icon="@drawable/course"
         />
 
-    <item
-        android:id="@+id/admin_profile_navigation"
-        android:title="@string/admin_main_navigation4"
-        android:icon="@drawable/profile"
-        />
 
 </menu>

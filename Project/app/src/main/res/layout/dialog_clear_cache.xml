@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:gravity="center_horizontal">
+
+    <!-- 内容部分 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="清空缓存"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- 内容提示 -->
+        <TextView
+            android:id="@+id/tvContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="确定清空缓存？"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:layout_marginBottom="20dp" />
+    </LinearLayout>
+
+    <!-- 分隔线 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDDDDD" />
+
+    <!-- 底部两个贴边按钮 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <!-- 取消按钮 -->
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="取消"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#000000" />
+
+        <!-- 垂直分割线 -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#DDDDDD" />
+
+        <!-- 确定按钮 -->
+        <TextView
+            android:id="@+id/btnConfirm"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="确定"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#AD9705" />
+    </LinearLayout>
+</LinearLayout>

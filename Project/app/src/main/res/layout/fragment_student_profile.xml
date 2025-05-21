@@ -67,7 +67,7 @@
                         android:id="@+id/tvNum1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="100"
+                        android:text="0"
                         android:textSize="24sp"
                         />
 
@@ -92,7 +92,7 @@
                         android:id="@+id/tvNum2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="100"
+                        android:text="0"
                         android:textSize="24sp"
                         />
 
@@ -117,7 +117,7 @@
                         android:id="@+id/tvNum3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="100"
+                        android:text="0"
                         android:textSize="24sp"
                         />
 
@@ -142,7 +142,7 @@
                         android:id="@+id/tvNum4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="100"
+                        android:text="0"
                         android:textSize="24sp"
                         />
 

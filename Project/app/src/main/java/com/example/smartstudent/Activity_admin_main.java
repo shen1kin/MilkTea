@@ -41,9 +41,6 @@ public class Activity_admin_main extends AppCompatActivity {
                 case R.id.admin_score_navigation:
                     loadFragment(new Fragment_admin_commodity());  // 切换到订单管理
                     return true;
-                case R.id.admin_profile_navigation:
-                    loadFragment(new Fragment_admin_feedback());  // 切换到用户反馈
-                    return true;
             }
             return false;
         });
@@ -74,8 +71,6 @@ public class Activity_admin_main extends AppCompatActivity {
                 bottomNav.setSelectedItemId(R.id.admin_item_control_navigation);
             } else if (fragment instanceof Fragment_admin_commodity) {
                 bottomNav.setSelectedItemId(R.id.admin_score_navigation);
-            } else if (fragment instanceof Fragment_admin_feedback) {
-                bottomNav.setSelectedItemId(R.id.admin_profile_navigation);
             }
         }
     }

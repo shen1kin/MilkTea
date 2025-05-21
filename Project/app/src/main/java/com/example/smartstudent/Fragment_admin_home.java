@@ -49,11 +49,10 @@ public class Fragment_admin_home extends Fragment {
         // 快捷入口卡片点击跳转
         LinearLayout layoutOrderManage = view.findViewById(R.id.layoutOrderManage);      // 订单管理
         LinearLayout layoutProductManage = view.findViewById(R.id.layoutProductManage);  // 商品管理
-        LinearLayout layoutUserFeedback = view.findViewById(R.id.layoutUserFeedback);    // 用户反馈
 
-        layoutOrderManage.setOnClickListener(v -> replaceFragment(new Fragment_admin_commodity()));
-        layoutProductManage.setOnClickListener(v -> replaceFragment(new Fragment_admin_item_control()));
-        layoutUserFeedback.setOnClickListener(v -> replaceFragment(new Fragment_admin_feedback()));
+        layoutOrderManage.setOnClickListener(v -> replaceFragment(new Fragment_admin_item_control()));
+        layoutProductManage.setOnClickListener(v -> replaceFragment(new Fragment_admin_commodity()));
+
 
         // 获取 TextView 控件引用
         tvTodayOrders = view.findViewById(R.id.tvTodayOrders);
@@ -159,8 +158,6 @@ public class Fragment_admin_home extends Fragment {
                 bottomNav.setSelectedItemId(R.id.admin_item_control_navigation);
             } else if (fragment instanceof Fragment_admin_commodity) {
                 bottomNav.setSelectedItemId(R.id.admin_score_navigation);
-            } else if (fragment instanceof Fragment_admin_feedback) {
-                bottomNav.setSelectedItemId(R.id.admin_profile_navigation);
             }
         }
     }
