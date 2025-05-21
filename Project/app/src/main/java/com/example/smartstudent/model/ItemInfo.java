@@ -8,8 +8,17 @@ public class ItemInfo {
     private String  item_num;
     private String  item_state;
     private String  item_price;
+    private String  imageWay;
 
     private boolean isDeleted;  // 新增字段，表示是否下架
+
+    public String getImageWay() {
+        return imageWay;
+    }
+
+    public void setImageWay(String imageWay) {
+        this.imageWay = imageWay;
+    }
 
     public boolean isDeleted() {
         return isDeleted;
@@ -19,19 +28,12 @@ public class ItemInfo {
         isDeleted = deleted;
     }
 
-    public ItemInfo(int item_id, String item_name, String item_num, String item_state, String item_price) {
-        this.item_id = item_id;
-        this.item_name = item_name;
-        this.item_num = item_num;
-        this.item_state = item_state;
-        this.item_price = item_price;
-    }
-
-    public ItemInfo(int item_id, String item_name ,String item_state, String item_price) {
+    public ItemInfo(int item_id, String item_name, String item_state, String item_price,String imageWay) {
         this.item_id = item_id;
         this.item_name = item_name;
         this.item_state = item_state;
         this.item_price = item_price;
+        this.imageWay = imageWay;
     }
 
     public int getItem_id() {

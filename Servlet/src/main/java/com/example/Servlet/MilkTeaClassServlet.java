@@ -8,11 +8,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @WebServlet("/milk-tea-class")  // URL 以 / 开头
@@ -80,10 +84,65 @@ public class MilkTeaClassServlet extends HttpServlet {
         out.flush();
 }
 
-    // 查询单个奶茶属性（POST 请求）
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        JSONObject result = new JSONObject();
+
+        try (BufferedReader reader = request.getReader()) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            JSONObject json = new JSONObject(sb.toString());
+
+            // 只处理 className
+            String className = json.getString("class_name");
+
+            int classId = MilkTeaClassDao.addClass(className);
+
+            if (classId > 0) {
+                // 插入或查询成功
+                result.put("status", "success");
+                result.put("message", "分类处理成功");
+                result.put("class_id", classId);
+            } else {
+                // 插入失败
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                result.put("status", "fail");
+                result.put("message", "分类处理失败");
+            }
+
+        } catch (JSONException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            try {
+                result.put("status", "fail");
+                result.put("message", "无效的 JSON 数据");
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            try {
+                result.put("status", "error");
+                result.put("message", "服务器内部错误: " + e.getMessage());
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        PrintWriter out = response.getWriter();
+        out.print(result.toString());
+        out.flush();
     }
+
+
+
 }
