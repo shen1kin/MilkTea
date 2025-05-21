@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layoutCategory"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="12dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingStart="12dp"
+    android:paddingEnd="18dp"
     android:background="@drawable/bg_category_normal">
 
     <TextView
@@ -14,5 +15,14 @@
         android:layout_height="wrap_content"
         android:text="分类名"
         android:textSize="14sp"
-        android:textColor="#333333" />
-</LinearLayout>
+        android:textColor="#333333"
+        android:layout_centerInParent="true" />
+
+    <!-- 固定显示右侧竖线 -->
+    <View
+        android:id="@+id/viewRightLine"
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+         android:background="#888888" />
+</RelativeLayout>

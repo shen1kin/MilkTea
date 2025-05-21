@@ -161,7 +161,7 @@
             android:id="@+id/recyclerCategory"
             android:layout_width="100dp"
             android:layout_height="match_parent"
-            android:background="#F7F7F7"
+            android:background="#F2F2F2"
             android:paddingTop="4dp"
             android:clipToPadding="false" />
 
