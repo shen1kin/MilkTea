@@ -106,6 +106,50 @@ public class MilkTeaItemDao {
         return new ArrayList<>(milkTeaMap.values());
     }
 
+    public List<MilkTea> getAllMilkTeaList() {
+        List<MilkTea> milkTeas = new ArrayList<>();
 
+        String sql = "SELECT id, name, description, image, price, is_deleted FROM MilkTeaList ORDER BY id";
+
+        try (
+                Connection conn = DBUtil.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()
+        ) {
+            while (rs.next()) {
+                MilkTea milkTea = new MilkTea();
+                milkTea.setId(rs.getInt("id"));
+                milkTea.setName(rs.getString("name"));
+                milkTea.setDescription(rs.getString("description"));
+                milkTea.setImage(rs.getBytes("image"));
+                milkTea.setPrice(rs.getDouble("price"));
+                milkTea.setDeleted(rs.getInt("is_deleted") != 0); // ← 转为 boolean
+                milkTeas.add(milkTea);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return milkTeas;
+    }
+
+
+
+    public boolean updateIsDeletedById(int id, boolean isDeleted) {
+        String sql = "UPDATE MilkTeaList SET is_deleted = ? WHERE id = ?";
+        try (
+                Connection conn = DBUtil.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+        ) {
+            stmt.setInt(1, isDeleted ? 1 : 0);  // 数据库用 int 存储布尔值
+            stmt.setInt(2, id);
+
+            int rows = stmt.executeUpdate();
+            return rows > 0; // 更新成功返回 true
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }

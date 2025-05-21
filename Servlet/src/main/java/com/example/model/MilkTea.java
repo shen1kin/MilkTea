@@ -96,8 +96,6 @@ public class MilkTea {
         isDeleted = deleted;
     }
 
-
-
     @Override
     public String toString() {
         return "MilkTea{id=" + id + ", name='" + name + "', isDeleted=" + isDeleted + ", attributes=" + attributes + '}';
