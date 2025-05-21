@@ -38,6 +38,7 @@ import com.example.smartstudent.model.MilkTeaAttribute;
 import com.example.smartstudent.model.OrderItem;
 import com.example.smartstudent.model.OrderModeManager;
 import com.example.smartstudent.model.ProductInfo;
+import com.example.smartstudent.utils.ImageUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONArray;
@@ -427,30 +428,14 @@ public class Fragment_student_course extends Fragment {
                                     product.description = teaObj.getString("description");
                                     product.clazz = teaObj.getString("class");
 
-                                    // Base64 解码部分
                                     String base64 = teaObj.getString("image");
-                                    if (base64 != null && base64.contains(",")) {
-                                        base64 = base64.split(",")[1]; // 移除 Data URL 前缀
-                                    }
-
-                                    Bitmap bitmap = null;
-                                    try {
-                                        byte[] decodedBytes = Base64.decode(base64, Base64.DEFAULT);
-                                        bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
-                                    } catch (Exception e) {
-                                        Log.e("ImageDecode", "Base64 decode error", e);
-                                    }
-
-// 必须检查是否为 null 再保存
-                                    if (bitmap != null) {
-                                        String imagePath = saveImage(bitmap);
-                                        if (imagePath != null) {
-                                            product.image = imagePath;
-                                        }
-                                        bitmap.recycle(); // 及时释放内存
+                                    String imagePath = ImageUtils.decodeBase64AndSaveImage(getContext(), base64);
+                                    if (imagePath != null) {
+                                        product.image = imagePath;
                                     } else {
-                                        Log.e("ImageSave", "Failed to decode Base64 image");
+                                        Log.e("ImageSave", "Failed to decode and save Base64 image");
                                     }
+
 
                                     // 解析属性列表
                                     JSONArray attrArray = teaObj.getJSONArray("attributes");
@@ -546,35 +531,6 @@ public class Fragment_student_course extends Fragment {
             // 添加分类下商品
             productList.addAll(products);
             index++;
-        }
-    }
-
-    //将图片缓存到本地，返回值为文件的绝对路径
-    public String saveImage(Bitmap bitmap) {
-        // 1. 检查Context可用性
-        if (getContext() == null) return null;
-
-        // 2. 获取应用专属缓存目录（无需权限）
-        File cacheDir = getContext().getExternalCacheDir();
-        if (cacheDir == null) {
-            cacheDir = getContext().getCacheDir();
-        }
-
-        // 3. 清理旧文件（可选）
-        for (File file : cacheDir.listFiles()) {
-            file.delete();
-        }
-
-        // 4. 保存新文件
-        String filename = "IMG_" + System.currentTimeMillis() + ".png";
-        File newFile = new File(cacheDir, filename);
-
-        try (FileOutputStream out = new FileOutputStream(newFile)) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            return newFile.getAbsolutePath();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 

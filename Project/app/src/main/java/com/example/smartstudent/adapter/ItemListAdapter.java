@@ -1,5 +1,6 @@
 package com.example.smartstudent.adapter;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smartstudent.R;
 import com.example.smartstudent.model.ItemInfo;
+import com.example.smartstudent.utils.ImageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,13 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         holder.tvItemId.setText(String.valueOf(itemInfo.getItem_id()));
         holder.tvItemState.setText(itemInfo.getItem_state());
         holder.tvItemPrice.setText(itemInfo.getItem_price());
+        // 从本地加载图片
+        String savedPath = itemInfo.getImageWay();
+        Bitmap bitmap = ImageUtils.loadImageFromPath(savedPath);
+        if (bitmap != null) {
+            holder.image.setImageBitmap(bitmap);
+        }
+
 
         holder.itemView.setOnClickListener(v -> {
             if (itemClickListener != null) {
@@ -69,6 +78,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
         TextView tvItemState;
         TextView tvItemNum;
         TextView tvItemPrice;
+        ImageView image;
         public ItemListHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -77,6 +87,7 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ItemLi
             tvItemId = itemView.findViewById(R.id.tvItemId);
             tvItemState = itemView.findViewById(R.id.tvItemState);
             tvItemPrice = itemView.findViewById(R.id.tvItemPrice);
+            image = itemView.findViewById(R.id.image);
 
 
         }

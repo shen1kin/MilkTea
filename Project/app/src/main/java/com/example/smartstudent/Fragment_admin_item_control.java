@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smartstudent.adapter.ItemListAdapter;
 import com.example.smartstudent.adapter.SpinnerAdapter;
 import com.example.smartstudent.model.ItemInfo;
+import com.example.smartstudent.utils.ImageUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -168,9 +169,12 @@ public class Fragment_admin_item_control extends Fragment {
                                     int id = obj.getInt("id");
                                     String name = obj.getString("name");
                                     String price = obj.getString("price");
+                                    String base64 = obj.getString("image");
+                                    String imageWay = ImageUtils.decodeBase64AndSaveImage(getContext(), base64);
+
                                     boolean isDeleted = obj.optBoolean("is_deleted", false);
                                     String status = isDeleted ? "下架" : "上架";
-                                    ItemInfo item = new ItemInfo(id, name, status, "$" + price);
+                                    ItemInfo item = new ItemInfo(id, name, status, "$" + price,imageWay);
                                     item.setDeleted(isDeleted);
                                     itemInfoList.add(item);
                                 }
@@ -239,18 +243,4 @@ public class Fragment_admin_item_control extends Fragment {
         }).start();
     }
 
-    public String saveImage(Bitmap bitmap) {
-        if (getContext() == null) return null;
-        File cacheDir = getContext().getExternalCacheDir();
-        if (cacheDir == null) cacheDir = getContext().getCacheDir();
-        for (File file : cacheDir.listFiles()) file.delete();
-        File newFile = new File(cacheDir, "IMG_" + System.currentTimeMillis() + ".png");
-        try (FileOutputStream out = new FileOutputStream(newFile)) {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            return newFile.getAbsolutePath();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 }
